@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'GmarketSansLight';
+  src: url('../../src/assets/font/GmarketSansLight.woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSansMedium';
+  src: url('../../src/assets/font/GmarketSansMedium.woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'GmarketSansBold';
+  src: url('../../src/assets/font/GmarketSansBold.woff2');
+  font-display: swap;
+}
