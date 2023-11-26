@@ -10,7 +10,7 @@ function SearchBar() {
           type="search"
           placeholder="검색어를 입력해주세요"
         ></SearchInput>
-        <SearchIcon src={searchIcon} />
+        <SearchIcon src={searchIcon} alt="검색" />
       </SearchArea>
     </form>
   );

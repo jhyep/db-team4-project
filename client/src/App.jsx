@@ -18,7 +18,7 @@ function App() {
 export default App;
 
 const Wrap = styled.div`
-  min-height: 600px;
+  min-height: 500px;
   position: relative;
-  padding-bottom: 50px;
+  padding-bottom: 70px;
 `;

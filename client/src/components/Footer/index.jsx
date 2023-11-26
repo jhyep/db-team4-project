@@ -31,13 +31,15 @@ const FooterContainer = styled.footer`
 const FooterContents = styled.div`
   color: #656d76;
   display: flex;
+  justify-content: space-evenly;
   margin: auto;
   width: 1024px;
+  font-size: 14px;
 `;
 
 const CopyrightDiv = styled.div`
   margin-top: 10px;
-  margin-right: 30px;
+  margin-right: 40px;
 `;
 
 const PageDiv = styled.div`

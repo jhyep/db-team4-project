@@ -5,7 +5,6 @@ export const MenuContainer = styled.div`
   display: flex;
   gap: 20px;
   font-family: GmarketSansMedium;
-  font-weight: bold;
 
   > div {
     cursor: pointer;
