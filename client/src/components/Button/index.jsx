@@ -4,7 +4,6 @@ function Button({
   children,
   color,
   width,
-  height,
   backgroundColor,
   onClick,
   ...restProps
@@ -12,8 +11,8 @@ function Button({
   const style = {
     color: color || '#fff',
     width: width || '80px',
-    height: height || '34px',
     backgroundColor: backgroundColor || `${palette.mainYellow}`,
+    height: '34px',
     fontSize: '14px',
   };
 
