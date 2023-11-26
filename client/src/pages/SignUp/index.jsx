@@ -16,7 +16,7 @@ function SignUp() {
           <S.InputBox type="password" placeholder="비밀번호" />
           <S.InputBox type="password" placeholder="비밀번호 확인" />
         </S.InputWrapper>
-        <Button width="100%">로그인</Button>
+        <Button width="100%">회원가입</Button>
         <GuideWrap>
           <p>계정이 이미 있는 경우에는</p>
           <p>
