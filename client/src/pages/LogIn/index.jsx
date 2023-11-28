@@ -11,7 +11,7 @@ function LogIn() {
   async function handleLogin(e) {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5173/login', {
+      const response = await axios.post('/api/login', {
         userid: userid,
         password: password,
       });
@@ -53,5 +53,4 @@ function LogIn() {
     </>
   );
 }
-
 export default LogIn;

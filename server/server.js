@@ -6,14 +6,14 @@ const express = require("express");
 const app = express();
 const session = require("express-session");
 const path = require("path");
-const port = 5173;
+const port = 8080;
 const bodyParser = require("body-parser");
 
 app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 
-app.use(express.static(path.join(__dirname, "../client/dist")));
+app.use(express.static(path.join(__dirname, "../client")));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(
@@ -31,10 +31,10 @@ const connectionConfig = {
 };
 
 app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
-app.post("/login", async function (req, res) {
+app.post("/api/login", async function (req, res) {
   console.log("login");
   const userid = req.body.userid;
   const password = req.body.password;
@@ -69,7 +69,7 @@ app.post("/login", async function (req, res) {
   }
 });
 
-app.post("/signup", async function (req, res) {
+app.post("/api/signup", async function (req, res) {
   console.log("signup");
   const userid = req.body.userid;
   const password = req.body.password;
@@ -111,7 +111,7 @@ app.post("/logout", function (req, res) {
 });
 
 app.get("*", function (req, res) {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+  res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
 app.listen(port, function () {
