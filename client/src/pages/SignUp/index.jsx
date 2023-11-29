@@ -2,6 +2,7 @@ import * as S from '../LogIn/style';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
@@ -10,6 +11,8 @@ function SignUp() {
   const [password, setPassword] = useState('');
   const [confirmpwd, setConfirmpwd] = useState('');
   const [username, setUsername] = useState('');
+
+  const navigate = useNavigate();
 
   async function handleSignUp(e) {
     e.preventDefault();
@@ -24,6 +27,20 @@ function SignUp() {
         password: password,
         username: username,
       });
+
+      if (response.data.state) {
+        alert('회원가입이 완료되었습니다');
+        navigate('/', { replace: true });
+        window.location.reload();
+      } else {
+        if (response.data.cause == 'userid') {
+          alert('아이디 중복');
+          window.location.reload();
+        } else {
+          alert('회원가입 오류');
+          window.location.reload();
+        }
+      }
       console.log('서버 응답: ', response.data);
     } catch (err) {
       console.log('로그인 오류', err);

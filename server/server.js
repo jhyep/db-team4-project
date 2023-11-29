@@ -55,12 +55,14 @@ app.post("/api/login", async function (req, res) {
       } else {
         res.json({
           state: false,
+          cause: "password",
           message: "incorrect password",
         });
       }
     } else {
       res.json({
         state: false,
+        cause: "userid",
         message: "login failed",
       });
     }
@@ -81,6 +83,7 @@ app.post("/api/signup", async function (req, res) {
     if (result.rows.length > 0) {
       res.json({
         state: false,
+        cause: "userid",
         message: "중복된 ID",
       });
     } else {
@@ -95,6 +98,7 @@ app.post("/api/signup", async function (req, res) {
         console.log("회원가입 실패");
         res.json({
           state: false,
+          cause: "error",
           message: "회원가입 실패",
         });
       }

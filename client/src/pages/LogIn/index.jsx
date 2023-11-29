@@ -1,12 +1,15 @@
 import * as S from './style';
 import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import axios from 'axios';
 
 function LogIn() {
   const [userid, setUserid] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -15,6 +18,20 @@ function LogIn() {
         userid: userid,
         password: password,
       });
+
+      if (response.data.state) {
+        sessionStorage.setItem('userid', userid);
+        navigate('/', { replace: true });
+        window.location.reload();
+      } else {
+        if (response.data.cause == 'password') {
+          alert('올바르지 않은 비밀번호');
+          window.location.reload();
+        } else {
+          alert('존재하지 않는 아이디');
+          window.location.reload();
+        }
+      }
       console.log('서버 응답: ', response.data);
     } catch (err) {
       console.log('로그인 오류', err);
