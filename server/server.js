@@ -21,7 +21,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     secret: "secret",
-  }),
+  })
 );
 
 const connectionConfig = {
@@ -35,10 +35,8 @@ app.get("/", function (req, res) {
 });
 
 app.post("/api/login", async function (req, res) {
-  console.log("login");
   const userid = req.body.userid;
   const password = req.body.password;
-  console.log("userid:", userid, "password:", password);
   try {
     const result = await checkDupId(userid);
 
@@ -67,16 +65,14 @@ app.post("/api/login", async function (req, res) {
       });
     }
   } catch (err) {
-    console.error("Error login: ", err);
+    console.error("LogIn Error: ", err);
   }
 });
 
 app.post("/api/signup", async function (req, res) {
-  console.log("signup");
   const userid = req.body.userid;
   const password = req.body.password;
   const username = req.body.username;
-  console.log("userid:", userid, "password:", password, "username:", username);
   let result;
   try {
     result = await checkDupId(userid);
@@ -89,13 +85,11 @@ app.post("/api/signup", async function (req, res) {
     } else {
       result = await createUser(userid, password, username);
       if (result.rowsAffected > 0) {
-        console.log("회원가입 성공");
         res.json({
           state: true,
           message: "회원가입 성공",
         });
       } else {
-        console.log("회원가입 실패");
         res.json({
           state: false,
           cause: "error",
@@ -104,12 +98,11 @@ app.post("/api/signup", async function (req, res) {
       }
     }
   } catch (err) {
-    console.log("Error singup ", err);
+    console.error("SignUp Error: ", err);
   }
 });
 
 app.post("/logout", function (req, res) {
-  console.log("logout");
   req.session.destroy();
   res.end();
 });
@@ -134,14 +127,14 @@ async function checkDupId(userid) {
 
     return result;
   } catch (err) {
-    console.error("Error login: ", err);
+    console.error("LogIn Error: ", err);
     return null;
   } finally {
     if (connection) {
       try {
         connection.close();
       } catch (err) {
-        console.error(err);
+        console.error("Connection Close Error: ", err);
       }
     }
   }
@@ -159,14 +152,14 @@ async function createUser(userid, password, username) {
 
     return result;
   } catch (err) {
-    console.error("Error signup: ", err);
+    console.error("SignUp Error: ", err);
     return null;
   } finally {
     if (connection) {
       try {
         connection.close();
       } catch (err) {
-        console.error(err);
+        console.error("Connection Close Error: ", err);
       }
     }
   }

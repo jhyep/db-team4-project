@@ -1,10 +1,10 @@
 import * as S from '../LogIn/style';
+import axios from 'axios';
 import styled from 'styled-components';
 import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import axios from 'axios';
 
 function SignUp() {
   const [userid, setUserid] = useState('');
@@ -18,7 +18,7 @@ function SignUp() {
     e.preventDefault();
 
     if (password != confirmpwd) {
-      return alert('일치하지 않는 비밀번호');
+      return alert('비밀번호가 일치하지 않습니다.');
     }
 
     try {
@@ -34,16 +34,16 @@ function SignUp() {
         window.location.reload();
       } else {
         if (response.data.cause == 'userid') {
-          alert('아이디 중복');
+          alert('이미 존재하는 아이디입니다.');
           window.location.reload();
         } else {
-          alert('회원가입 오류');
+          alert('회원가입 도중 오류가 발생하였습니다.');
           window.location.reload();
         }
       }
-      console.log('서버 응답: ', response.data);
     } catch (err) {
-      console.log('로그인 오류', err);
+      alert('오류가 발생하였습니다. 나중에 다시 시도해주세요.');
+      console.log('회원가입 오류', err);
     }
   }
 

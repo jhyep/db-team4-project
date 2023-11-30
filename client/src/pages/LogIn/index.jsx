@@ -1,9 +1,9 @@
 import * as S from './style';
+import axios from 'axios';
 import Button from '../../components/Button';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function LogIn() {
   const [userid, setUserid] = useState('');
@@ -25,15 +25,15 @@ function LogIn() {
         window.location.reload();
       } else {
         if (response.data.cause == 'password') {
-          alert('올바르지 않은 비밀번호');
+          alert('올바르지 않은 비밀번호입니다.');
           window.location.reload();
         } else {
-          alert('존재하지 않는 아이디');
+          alert('존재하지 않는 아이디입니다.');
           window.location.reload();
         }
       }
-      console.log('서버 응답: ', response.data);
     } catch (err) {
+      alert('오류가 발생하였습니다. 나중에 다시 시도해주세요.');
       console.log('로그인 오류', err);
     }
   }
