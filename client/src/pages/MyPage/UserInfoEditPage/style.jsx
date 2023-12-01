@@ -3,10 +3,17 @@ import styled from 'styled-components';
 export const Container = styled.div`
   background-color: #fff;
   border: 1px solid #eee;
-  width: 300px;
+  display: flex;
+  width: 650px;
   margin: auto;
   margin-top: 70px;
   padding: 30px;
+`;
+
+export const LeftContainer = styled.div`
+  width: 300px;
+  padding-right: 30px;
+  border-right: solid 1px #eee;
 `;
 
 export const Title = styled.div`
@@ -38,16 +45,25 @@ export const InputBox = styled.input`
   font-size: 14px;
 `;
 
-export const SuggestionWrap = styled.div`
+export const RightContainer = styled.div`
   color: #555555;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 0 0 0;
+  justify-content: center;
+  padding-left: 30px;
   font-size: 14px;
 
   > p > a {
     color: #0076c0;
-    margin-left: 20px;
+    margin-left: 15px;
   }
+`;
+
+export const DeleteAlert = styled.p`
+  color: #ff6666;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
 `;
