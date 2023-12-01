@@ -5,10 +5,10 @@ async function isbn10to13(isbn10) {
   const isbn12 = "978" + isbn10.substring(0, 9);
 
   let sum = 0;
-  for (let i = 0; i < 12; i++) {
+  isbn12.split("").forEach((char, i) => {
     const digit = parseInt(isbn12[i]);
     sum += i % 2 === 0 ? digit : digit * 3;
-  }
+  });
   const checkDigit = (10 - (sum % 10)) % 10;
   const isbn13 = isbn12 + checkDigit;
 
