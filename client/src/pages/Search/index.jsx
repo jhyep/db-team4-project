@@ -115,10 +115,9 @@ function Search() {
           </button>
         </div>
         <div>
-          {searchResult.map((item) => {
+          {searchResult.map((item, index) => {
             return (
-              // isbn이 중복이 될 수가 없는데 알라딘에서 중복된 값을 주는 경우가 있습니다. key를 빼야할 수도 있습니다.
-              <div key={item.isbn13} style={{ marginTop: '1em' }}>
+              <div key={`search-result-${index}`} style={{ marginTop: '1em' }}>
                 <p>(____제목) {item.title}</p>
                 <p>(____저자) {item.author}</p>
                 <p>(__출판사) {item.publisher}</p>
