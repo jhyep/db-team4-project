@@ -1,9 +1,10 @@
 import styled from 'styled-components';
+import palette from '../../../styles/palette';
 
 export const MenuContainer = styled.div`
-  color: #1b1d25;
+  color: ${palette.lightBlack};
   display: flex;
-  gap: 20px;
+  gap: 36px;
   font-family: GmarketSansMedium;
 
   > div {
