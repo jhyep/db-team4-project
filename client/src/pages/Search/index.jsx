@@ -26,7 +26,7 @@ function Search() {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8080/api/search', {
+      const response = await axios.post('/book/search', {
         query: searchWord,
         queryType: searchType,
         sort: searchSort,
