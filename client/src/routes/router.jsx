@@ -18,14 +18,12 @@ const router = createBrowserRouter([
           { index: true, element: <div>main</div> },
           { path: 'signup', element: <SignUp /> },
           { path: 'login', element: <LogIn /> },
-          { path: 'mypage', element: <div>마이페이지</div> },
           { path: 'search', element: <Search /> },
           { path: 'mypage', element: <MyPage /> },
           {
             path: 'user-info-edit',
             element: <UserInfoEditPage />,
           },
-          { path: 'search', element: <div>검색 결과 페이지</div> },
           {
             path: 'book',
             element: <Outlet />,
