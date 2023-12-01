@@ -1,6 +1,8 @@
 import App from '../App';
 import LogIn from '../pages/LogIn';
+import MyPage from '../pages/MyPage';
 import SignUp from '../pages/SignUp';
+import UserInfoEditPage from '../pages/MyPage/UserInfoEditPage';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
 const router = createBrowserRouter([
@@ -15,7 +17,11 @@ const router = createBrowserRouter([
           { index: true, element: <div>main</div> },
           { path: 'signup', element: <SignUp /> },
           { path: 'login', element: <LogIn /> },
-          { path: 'mypage', element: <div>마이페이지</div> },
+          { path: 'mypage', element: <MyPage /> },
+          {
+            path: 'user-info-edit',
+            element: <UserInfoEditPage />,
+          },
           { path: 'search', element: <div>검색 결과 페이지</div> },
           {
             path: 'book',
