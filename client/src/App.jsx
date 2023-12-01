@@ -18,6 +18,7 @@ function App() {
 export default App;
 
 const Wrap = styled.div`
+  background-color: #fafafa;
   min-height: 500px;
   position: relative;
   padding-bottom: 70px;
