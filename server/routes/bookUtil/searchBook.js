@@ -42,8 +42,12 @@ async function searchBook(requestData) {
           pubDate: item.pubDate,
           isbn13: item.isbn13 ? item.isbn13 : await isbn10to13(item.isbn),
           categoryName: item.categoryName,
+          categoryid: item.categoryId,
           publisher: item.publisher,
           seriesName: item.seriesInfo ? item.seriesInfo.seriesName : "",
+          seriesid: item.seriesInfo ? item.seriesInfo.seriesId : 0,
+          salespoint: item.salesPoint,
+          numofrating: item.customerReviewRank,
         };
         searchResult.push(searchItem);
       }
