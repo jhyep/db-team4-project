@@ -22,7 +22,7 @@ function SignUp() {
     }
 
     try {
-      const response = await axios.post('/api/signup', {
+      const response = await axios.post('/user/signup', {
         userid: userid,
         password: password,
         username: username,
