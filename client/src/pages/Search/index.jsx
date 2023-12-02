@@ -22,11 +22,30 @@ function Search() {
     setSearchRecentPublish(e.target.value);
   };
 
+  async function saveBook(book) {
+    if (!sessionStorage.getItem('userid')) {
+      return alert('로그인 해주세요!');
+    }
+    try {
+      const response = await axios.post('/bookinfo/save', {
+        book: book,
+        userid: sessionStorage.getItem('userid'),
+      });
+      if (response.data.state) {
+        alert('저장 성공');
+      } else {
+        alert('이미 저장한 도서입니다');
+      }
+    } catch (err) {
+      console.log('error ', err);
+    }
+  }
+
   async function bookSearch(e) {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/book/search', {
+      const response = await axios.post('/bookinfo/search', {
         query: searchWord,
         queryType: searchType,
         sort: searchSort,
@@ -126,6 +145,14 @@ function Search() {
                   (카테고리) {item.categoryName ? item.categoryName : '(없음)'}
                 </p>
                 <p>(__시리즈) {item.seriesName ? item.seriesName : '(없음)'}</p>
+                <button
+                  type="button"
+                  onClick={() => saveBook(item)}
+                  style={{ border: '1px solid' }}
+                >
+                  {' '}
+                  읽은책
+                </button>
               </div>
             );
           })}
