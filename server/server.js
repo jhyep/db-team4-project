@@ -20,7 +20,7 @@ app.get("/", function (req, res) {
 });
 
 app.use("/user", userRoutes);
-app.use("/book", bookRoutes);
+app.use("/bookinfo", bookRoutes);
 
 app.get("*", function (req, res) {
   res.sendFile(path.join(__dirname, "../client/index.html"));

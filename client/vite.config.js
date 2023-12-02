@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/user': 'http://localhost:8080/',
-      '/book': 'http://localhost:8080/',
+      '/bookinfo': 'http://localhost:8080/',
     },
   },
 });
