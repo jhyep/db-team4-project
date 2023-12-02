@@ -18,6 +18,7 @@ function SignUp() {
     e.preventDefault();
 
     if (password != confirmpwd) {
+      window.location.reload();
       return alert('비밀번호가 일치하지 않습니다.');
     }
 
