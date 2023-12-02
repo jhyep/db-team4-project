@@ -1,4 +1,7 @@
-const { checkDupId, createUser } = require("../dbUtil/dbUtils.js");
+const {
+  checkDupId,
+  createUser,
+} = require("../dbUtil/dbUserUtils/dbUserUtils.js");
 
 async function signup(requestData) {
   const userid = requestData.userid;

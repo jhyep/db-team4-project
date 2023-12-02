@@ -1,4 +1,4 @@
-const { checkDupId } = require("../dbUtil/dbUtils.js");
+const { checkDupId } = require("../dbUtil/dbUserUtils/dbUserUtils.js");
 
 async function login(requestData) {
   const userid = requestData.userid;
