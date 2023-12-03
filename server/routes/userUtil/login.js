@@ -9,7 +9,7 @@ async function login(requestData) {
 
     if (result.rows.length > 0) {
       if (password == result.rows[0].PASSWORD) {
-        return { state: true };
+        return { state: true, name: result.rows[0].NAME };
       } else {
         return { state: false, cause: "password" };
       }

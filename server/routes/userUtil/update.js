@@ -6,10 +6,10 @@ async function update(requestData) {
   const password = requestData.password;
 
   try {
-    const result = await updateUser(userid, username, password);
+    const { result, change } = await updateUser(userid, username, password);
 
     if (result.rowsAffected > 0) {
-      return { state: true };
+      return { state: true, change };
     } else {
       return { state: false, cause: "error" };
     }

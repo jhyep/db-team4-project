@@ -21,6 +21,7 @@ function LogIn() {
 
       if (response.data.state) {
         sessionStorage.setItem('userid', userid);
+        sessionStorage.setItem('name', response.data.name);
         navigate('/', { replace: true });
         window.location.reload();
       } else {

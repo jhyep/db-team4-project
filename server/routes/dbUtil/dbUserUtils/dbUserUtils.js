@@ -83,24 +83,27 @@ async function dbUserDelete(userid) {
 }
 
 async function updateUser(userid, username, password) {
-  let connection, sql, binds, result;
+  let connection, sql, binds, result, change;
   try {
     connection = await oracledb.getConnection(connectionConfig);
 
     if (!username) {
       sql = "update web_user set password = :password where user_id = :userid";
       binds = { password, userid };
+      change = "password";
     } else if (!password) {
       sql = "update web_user set name = :username where user_id = :userid";
       binds = { username, userid };
+      change = "name";
     } else {
       sql =
         "update web_user set name = :username, password = :password where user_id = :userid";
       binds = { username, password, userid };
+      change = "both";
     }
     result = await connection.execute(sql, binds);
 
-    return result;
+    return { result, change };
   } catch (err) {
     console.error("Update Error: ", err);
     return null;

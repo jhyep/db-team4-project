@@ -30,6 +30,9 @@ function UserInfoEditPage() {
         password: password,
       });
       if (response.data.state) {
+        if (response.data.change == 'name' || response.data.change == 'both') {
+          sessionStorage.setItem('name', username);
+        }
         alert('회원 정보 수정이 완료되었습니다.');
         navigate('/');
         window.location.reload();

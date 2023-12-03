@@ -4,8 +4,17 @@ import palette from '../../styles/palette';
 import PageContainer from '../../components/PageContainer';
 import LinedSpan from '../../components/LinedSpan';
 import ContentsBox from '../../components/ContentsBox';
-
+import { useState, useEffect } from 'react';
 function MyPage() {
+  const initialName = sessionStorage.getItem('name') || '김철수';
+
+  const [name, setName] = useState(initialName);
+
+  useEffect(() => {
+    const updatedName = sessionStorage.getItem('name') || '김철수';
+    setName(updatedName);
+  }, [name]);
+
   const nameStyle = {
     fontSize: '28px',
   };
@@ -26,7 +35,7 @@ function MyPage() {
             alt="프로필"
             width="70px"
           />
-          <h2 style={nameStyle}>김철수</h2>
+          <h2 style={nameStyle}>{name}</h2>
         </ProfileContainer>
         <button style={buttonStyle}>
           <Link to="/user-info-edit">정보 수정</Link>
