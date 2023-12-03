@@ -13,24 +13,6 @@ function Search() {
   function handleMouseEnter(index) {
     setHoveredIndex(index);
   }
-
-  async function saveBook(book) {
-    if (!sessionStorage.getItem('userid')) {
-      return alert('로그인 해주세요!');
-    }
-    try {
-      const response = await axios.post('/bookinfo/save', {
-        book: book,
-        userid: sessionStorage.getItem('userid'),
-      });
-      if (response.data.state) {
-        alert('저장 성공');
-      } else {
-        alert('이미 저장한 도서입니다');
-      }
-    } catch (err) {
-      console.log('error ', err);
-    }
   }
   function handleMouseLeave() {
     setHoveredIndex(null);

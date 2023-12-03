@@ -5,7 +5,7 @@ function ContentsBox({ children, width, height }) {
     backgroundColor: '#fff',
     border: '1px solid rgba(172, 168, 155, 0.3)',
     boxSizing: 'border-box',
-    minHeight: '250px',
+    minHeight: '200px',
     padding: '30px',
   };
 

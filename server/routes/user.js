@@ -14,11 +14,11 @@ router.post("/login", async function (req, res) {
       res.send(result);
     } catch (err) {
       res.status(500).send("Internal Server Error");
-      console.error("Internal Server Error while searching: ", err);
+      console.error("Internal Server Error while login process: ", err);
     }
   } else {
     res.status(400).send("Bad Request");
-    console.error("Bad request for search api: ", err);
+    console.error("Bad request for login api: ", err);
   }
 });
 
@@ -31,11 +31,11 @@ router.post("/signup", async function (req, res) {
       res.send(result);
     } catch (err) {
       res.status(500).send("Internal Server Error");
-      console.error("Internal Server Error while searching: ", err);
+      console.error("Internal Server Error while signup process: ", err);
     }
   } else {
     res.status(400).send("Bad Request");
-    console.error("Bad request for search api: ", err);
+    console.error("Bad request for signup api: ", err);
   }
 });
 
