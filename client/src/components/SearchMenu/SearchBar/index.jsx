@@ -1,18 +1,17 @@
 import styled from 'styled-components';
 import palette from '../../../styles/palette';
-import searchIcon from '../../../assets/icons/searchIcon.svg';
 
-function SearchBar() {
+function SearchBar({ width, onChange }) {
   return (
-    <form>
-      <SearchArea>
-        <SearchInput
-          type="search"
-          placeholder="검색어를 입력해주세요"
-        ></SearchInput>
-        <SearchIcon src={searchIcon} alt="검색" />
-      </SearchArea>
-    </form>
+    <SearchArea width={width}>
+      <SearchInput
+        type="search"
+        name="searchWord"
+        placeholder="검색어를 입력해주세요"
+        onChange={onChange}
+      ></SearchInput>
+      <SearchButton type="submit" />
+    </SearchArea>
   );
 }
 
@@ -21,13 +20,12 @@ export default SearchBar;
 const SearchArea = styled.div`
   display: flex;
   position: relative;
-  width: 400px;
   height: 50px;
+  margin-bottom: 5px;
 `;
 
 const SearchInput = styled.input`
-  border: 2px solid ${palette.mainYellow};
-  border-radius: 30px;
+  border: 4px solid ${palette.mainYellow};
   width: 100%;
   height: 100%;
   padding: 20px;
@@ -40,7 +38,10 @@ const SearchInput = styled.input`
   }
 `;
 
-const SearchIcon = styled.img`
+const SearchButton = styled.button`
+  background-image: url('/src/assets/icons/searchIcon.svg');
+  width: 30px;
+  height: 30px;
   position: absolute;
   margin: 10px;
   right: 10px;
