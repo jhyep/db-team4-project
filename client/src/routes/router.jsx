@@ -1,4 +1,5 @@
 import App from '../App';
+import Main from '../pages/Main';
 import LogIn from '../pages/LogIn';
 import MyPage from '../pages/MyPage';
 import SignUp from '../pages/SignUp';
@@ -15,7 +16,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <Outlet />,
         children: [
-          { index: true, element: <div>main</div> },
+          { index: true, element: <Main /> },
           { path: 'signup', element: <SignUp /> },
           { path: 'login', element: <LogIn /> },
           { path: 'search', element: <Search /> },
