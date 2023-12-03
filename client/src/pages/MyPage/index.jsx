@@ -32,14 +32,9 @@ function MyPage() {
           <Link to="/user-info-edit">정보 수정</Link>
         </button>
       </ProfileWrapper>
-      <ReviewContainer>
-        <ContentsBox width="512px">
-          <LinedSpan>내 리뷰</LinedSpan>
-        </ContentsBox>
-        <ContentsBox width="512px">
-          <LinedSpan>나의 서재</LinedSpan>
-        </ContentsBox>
-      </ReviewContainer>
+      <ContentsBox width="1024px">
+        <LinedSpan>내가 읽은 책</LinedSpan>
+      </ContentsBox>
     </PageContainer>
   );
 }
@@ -58,9 +53,4 @@ const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-`;
-
-const ReviewContainer = styled.div`
-  display: flex;
-  gap: 10px;
 `;

@@ -15,6 +15,11 @@ async function isbn10to13(isbn10) {
   return isbn13;
 }
 
+async function pixelUpgrade(cover) {
+  const changedUrl = cover.replace("coversum", "cover200");
+  return changedUrl;
+}
+
 async function searchBook(requestData) {
   const aladinSearchUrl =
     "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?MaxResults=100&output=js&Version=20131101&CategoryId=0";
@@ -34,13 +39,14 @@ async function searchBook(requestData) {
           ttbkey: process.env.ALADIN_API_KEY,
         },
       });
-
       for (const item of aladinResponse.data.item) {
         const searchItem = {
           title: item.title,
+          link: item.link,
           author: item.author,
           pubDate: item.pubDate,
           isbn13: item.isbn13 ? item.isbn13 : await isbn10to13(item.isbn),
+          cover: await pixelUpgrade(item.cover),
           categoryName: item.categoryName,
           publisher: item.publisher,
           seriesName: item.seriesInfo ? item.seriesInfo.seriesName : "",
