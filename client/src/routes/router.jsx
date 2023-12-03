@@ -1,6 +1,7 @@
 import App from '../App';
 import LogIn from '../pages/LogIn';
 import MyPage from '../pages/MyPage';
+import BookInfo from '../pages/BookInfo';
 import SignUp from '../pages/SignUp';
 import Search from '../pages/Search';
 import UserInfoEditPage from '../pages/MyPage/UserInfoEditPage';
@@ -25,12 +26,12 @@ const router = createBrowserRouter([
             element: <UserInfoEditPage />,
           },
           {
-            path: 'book',
+            path: 'bkinfo', // book을 쓰면 페이지 로딩이 안 됩니다....
             element: <Outlet />,
             children: [
               {
                 path: ':book_id',
-                element: <div>book info</div>,
+                element: <BookInfo />,
               },
             ],
           },
