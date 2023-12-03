@@ -22,7 +22,7 @@ function MyPage() {
     const fetchReads = async () => {
       const userid = sessionStorage.getItem('userid');
       try {
-        const response = await axios.post('/bookinfo/getReads', {
+        const response = await axios.post('/book/getReads', {
           userid: userid,
         });
 
