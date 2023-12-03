@@ -48,11 +48,11 @@ router.post("/delete", async function (req, res) {
       res.send(result);
     } catch (err) {
       res.status(500).send("Internal Server Error");
-      console.error("Internal Server Error while searching: ", err);
+      console.error("Internal Server Error while delete process: ", err);
     }
   } else {
     res.status(400).send("Bad Request");
-    console.error("Bad request for search api: ", err);
+    console.error("Bad request for delete api: ", err);
   }
 });
 
@@ -65,11 +65,11 @@ router.post("/update", async function (req, res) {
       res.send(result);
     } catch (err) {
       res.status(500).send("Internal Server Error");
-      console.error("Internal Server Error while searching: ", err);
+      console.error("Internal Server Error while update process: ", err);
     }
   } else {
     res.status(400).send("Bad Request");
-    console.error("Bad request for search api: ", err);
+    console.error("Bad request for update api: ", err);
   }
 });
 
