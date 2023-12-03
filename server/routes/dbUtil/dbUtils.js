@@ -58,4 +58,38 @@ async function createUser(userid, password, username) {
   }
 }
 
-module.exports = { checkDupId, createUser };
+async function getRate(isbn13) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql = "select * from rating where isbn13 = :isbn13";
+    binds = { isbn13 };
+    result = await connection.execute(sql, binds);
+
+    const rateSet = [];
+
+    for (const rate of result.rows) {
+      rateSet.push({
+        userId: rate[3],
+        rating: rate[1],
+        comment: rate[2],
+      });
+    }
+
+    return rateSet;
+  } catch (err) {
+    console.error("getReview Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+module.exports = { checkDupId, createUser, getRate };
