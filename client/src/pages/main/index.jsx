@@ -4,7 +4,7 @@ import SearchMenu from '../../components/SearchMenu';
 function Main() {
   return (
     <Container>
-      <SearchMenu width="600px" leftPadding="60px" />
+      <SearchMenu width={'600px'} leftPadding={'60px'} />
     </Container>
   );
 }

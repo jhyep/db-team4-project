@@ -15,9 +15,9 @@ function SearchMenu(props) {
   const { handleChange, handleSearch } = useSearch();
 
   return (
-    <FormContainer width={props.width} onSubmit={handleSearch}>
+    <FormContainer $width={props.width} onSubmit={handleSearch}>
       <SearchBar onChange={handleChange} />
-      <Condition leftPadding={props.leftPadding}>
+      <Condition $leftPadding={props.leftPadding}>
         <FormSpan>검색범위: </FormSpan>
         {searchRange.map((item, index) => {
           return (
@@ -34,7 +34,7 @@ function SearchMenu(props) {
           );
         })}
       </Condition>
-      <Condition leftPadding={props.leftPadding}>
+      <Condition $leftPadding={props.leftPadding}>
         <FormSpan>정렬순: </FormSpan>
         <select
           name="searchSort"
@@ -48,7 +48,7 @@ function SearchMenu(props) {
           ))}
         </select>
       </Condition>
-      <Condition leftPadding={props.leftPadding}>
+      <Condition $leftPadding={props.leftPadding}>
         <FormSpan>최근 N개월 내 출판: </FormSpan>
         <input
           type="number"
@@ -72,11 +72,11 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: ${(props) => (props.width ? props.width : '')};
+  width: ${(props) => props.$width || ''};
 `;
 
 const Condition = styled.div`
-  padding-left: ${(props) => (props.leftPadding ? props.leftPadding : '')};
+  padding-left: ${(props) => props.$leftPadding || ''};
 `;
 
 const FormSpan = styled.span`
