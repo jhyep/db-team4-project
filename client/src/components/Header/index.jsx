@@ -1,6 +1,5 @@
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import LeftMenu from './HeaderMenu/LeftMenu';
-import SearchBar from './SearchBar';
 import RightMenu from './HeaderMenu/RightMenu';
 import palette from '../../styles/palette';
 
@@ -9,9 +8,9 @@ function Header() {
     <>
       <HeaderWrapper>
         <HeaderContainer>
-          <Title>독후감 사이트</Title>
-          <LeftMenu />
-          <SearchBar />
+          <Title>
+            <Link to="/">독후감 사이트</Link>
+          </Title>
           <RightMenu />
         </HeaderContainer>
       </HeaderWrapper>

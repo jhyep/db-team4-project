@@ -1,9 +1,11 @@
 import App from '../App';
+import Main from '../pages/Main';
 import LogIn from '../pages/LogIn';
 import MyPage from '../pages/MyPage';
 import BookInfo from '../pages/BookInfo';
 import SignUp from '../pages/SignUp';
 import Search from '../pages/Search';
+import AdminPage from '../pages/AdminPage';
 import UserInfoEditPage from '../pages/MyPage/UserInfoEditPage';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
@@ -16,7 +18,7 @@ const router = createBrowserRouter([
         path: '/',
         element: <Outlet />,
         children: [
-          { index: true, element: <div>main</div> },
+          { index: true, element: <Main /> },
           { path: 'signup', element: <SignUp /> },
           { path: 'login', element: <LogIn /> },
           { path: 'search', element: <Search /> },
@@ -26,7 +28,11 @@ const router = createBrowserRouter([
             element: <UserInfoEditPage />,
           },
           {
-            path: 'bkinfo', // book을 쓰면 페이지 로딩이 안 됩니다....
+            path: 'admin',
+            element: <AdminPage />,
+          },
+          {
+            path: 'bkinfo',
             element: <Outlet />,
             children: [
               {

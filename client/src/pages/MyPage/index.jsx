@@ -4,8 +4,36 @@ import palette from '../../styles/palette';
 import PageContainer from '../../components/PageContainer';
 import LinedSpan from '../../components/LinedSpan';
 import ContentsBox from '../../components/ContentsBox';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
 function MyPage() {
+  const initialName = sessionStorage.getItem('name') || '김철수';
+
+  const [name, setName] = useState(initialName);
+  const [reads, setReads] = useState([]);
+
+  useEffect(() => {
+    const updatedName = sessionStorage.getItem('name') || '김철수';
+    setName(updatedName);
+  }, [name]);
+
+  useEffect(() => {
+    const fetchReads = async () => {
+      const userid = sessionStorage.getItem('userid');
+      try {
+        const response = await axios.post('/book/getReads', {
+          userid: userid,
+        });
+
+        setReads(response.data.rows);
+      } catch (error) {
+        console.log('Error ', error);
+      }
+    };
+    fetchReads();
+  }, []);
+
   const nameStyle = {
     fontSize: '28px',
   };
@@ -26,20 +54,26 @@ function MyPage() {
             alt="프로필"
             width="70px"
           />
-          <h2 style={nameStyle}>김철수</h2>
+          <h2 style={nameStyle}>{name}</h2>
         </ProfileContainer>
         <button style={buttonStyle}>
           <Link to="/user-info-edit">정보 수정</Link>
         </button>
       </ProfileWrapper>
-      <ReviewContainer>
-        <ContentsBox width="512px">
-          <LinedSpan>내 리뷰</LinedSpan>
-        </ContentsBox>
-        <ContentsBox width="512px">
-          <LinedSpan>나의 서재</LinedSpan>
-        </ContentsBox>
-      </ReviewContainer>
+      <ContentsBox width="1024px">
+        <LinedSpan>내가 읽은 책</LinedSpan>
+        <ul>
+          {reads && reads.length > 0 ? (
+            reads.map((read) => (
+              <li key={read.ISBN13}>
+                <p>제목: {read.TITLE}</p>
+              </li>
+            ))
+          ) : (
+            <p>읽은 책이 없습니다.</p>
+          )}
+        </ul>
+      </ContentsBox>
     </PageContainer>
   );
 }
@@ -58,9 +92,4 @@ const ProfileContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
-`;
-
-const ReviewContainer = styled.div`
-  display: flex;
-  gap: 10px;
 `;
