@@ -42,6 +42,8 @@ async function createUser(userid, password, username) {
       "insert into web_user (user_id, password, name) values (:userid, :password, :username)";
     binds = { userid, password, username };
     result = await connection.execute(sql, binds);
+    await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
 
     return result;
   } catch (err) {
@@ -66,6 +68,7 @@ async function dbUserDelete(userid) {
     sql = "delete from web_user where user_id = :userid";
     binds = { userid };
     result = await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
 
     return result;
   } catch (err) {
@@ -102,6 +105,7 @@ async function updateUser(userid, username, password) {
       change = "both";
     }
     result = await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
 
     return { result, change };
   } catch (err) {
