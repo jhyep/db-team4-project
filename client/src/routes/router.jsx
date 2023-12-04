@@ -2,6 +2,7 @@ import App from '../App';
 import Main from '../pages/Main';
 import LogIn from '../pages/LogIn';
 import MyPage from '../pages/MyPage';
+import BookInfo from '../pages/BookInfo';
 import SignUp from '../pages/SignUp';
 import Search from '../pages/Search';
 import AdminPage from '../pages/AdminPage';
@@ -31,12 +32,12 @@ const router = createBrowserRouter([
             element: <AdminPage />,
           },
           {
-            path: 'book',
+            path: 'bkinfo',
             element: <Outlet />,
             children: [
               {
                 path: ':book_id',
-                element: <div>book info</div>,
+                element: <BookInfo />,
               },
             ],
           },
