@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useState, useLayoutEffect } from 'react';
+import { CheckIcon } from '../../../assets/icons/CheckIcon';
 import axios from 'axios';
 import styled from 'styled-components';
+import palette from '../../../styles/palette';
 import LinedSpan from '../../../components/LinedSpan';
 import ContentsBox from '../../../components/ContentsBox';
 
 function MyLibrarySection() {
   const [reads, setReads] = useState([]);
+  const [isSorted, setIsSorted] = useState(false);
 
   useLayoutEffect(() => {
     const fetchReads = async () => {
@@ -24,9 +27,21 @@ function MyLibrarySection() {
     fetchReads();
   }, []);
 
+  function handleClick() {
+    setIsSorted((prevState) => !prevState);
+  }
+
   return (
     <ContentsBox width="1024px">
       <LinedSpan>내가 읽은 책</LinedSpan>
+      <SortMenu onClick={handleClick}>
+        <CheckIcon color={isSorted ? `${palette.lightBlack}` : '#ccc'} />
+        <span style={{ color: isSorted ? `${palette.lightBlack}` : '#ccc' }}>
+          {' '}
+          평균 평점 순으로 정렬
+        </span>
+      </SortMenu>
+
       <BookList>
         {reads && reads.length > 0 ? (
           reads.map((read) => (
@@ -53,6 +68,11 @@ function MyLibrarySection() {
 
 export default MyLibrarySection;
 
+const SortMenu = styled.div`
+  color: #ccc;
+  cursor: pointer;
+  text-align: right;
+`;
 const BookList = styled.ul`
   display: flex;
   flex-direction: column;

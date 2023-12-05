@@ -1,4 +1,4 @@
-function ContentsBox({ children, width, height }) {
+function ContentsBox({ children, width, height, margin }) {
   const style = {
     width: width || '300px',
     height: height,
@@ -6,6 +6,7 @@ function ContentsBox({ children, width, height }) {
     border: '1px solid rgba(172, 168, 155, 0.3)',
     boxSizing: 'border-box',
     minHeight: '200px',
+    margin: margin,
     padding: '30px',
   };
 
