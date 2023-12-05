@@ -6,7 +6,8 @@ async function getReads(requestData) {
     let result;
 
     if (requestData.searchWord == null) {
-      result = await dbGetReads(requestData.userid);
+      console.log(requestData.userId);
+      result = await dbGetReads(requestData.userId);
     } else {
       result = await dbGetCustomReads(requestData);
     }
