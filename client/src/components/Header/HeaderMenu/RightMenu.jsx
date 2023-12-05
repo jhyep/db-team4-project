@@ -34,7 +34,7 @@ function RightMenu() {
           </>
         ) : (
           <>
-            <Link to="/mypage">내 정보</Link>
+            <Link to="/mypage">마이페이지</Link>
             <div onClick={handleLogout}>로그아웃</div>
           </>
         )
