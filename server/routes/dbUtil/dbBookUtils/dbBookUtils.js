@@ -187,6 +187,102 @@ async function dbGetReads(userid) {
   }
 }
 
+async function dbCheckRead(readsTuple) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+    sql =
+      "select count(*) from reads where user_id=:user_id and isbn13=:isbn13";
+    binds = { user_id: readsTuple.userId, isbn13: readsTuple.isbn13 };
+    result = await connection.execute(sql, binds);
+
+    if (result.rows[0][0] == 0) return false;
+    else return true;
+  } catch (err) {
+    console.error("Reads Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbAddRead(readsTuple) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+    sql = "insert into reads values(:user_id, :isbn13)";
+    binds = { user_id: readsTuple.userId, isbn13: readsTuple.isbn13 };
+    result = await connection.execute(sql, binds);
+
+    return result;
+  } catch (err) {
+    console.error("addRead Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbInsertRead(readsTuple) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+    sql = "insert into reads values(:user_id, :isbn13)";
+    binds = { user_id: readsTuple.userId, isbn13: readsTuple.isbn13 };
+    result = await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
+
+    return result;
+  } catch (err) {
+    console.error("addRead Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbDeleteRead(readsTuple) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+    sql = "delete from reads where user_id=:user_id and isbn13=:isbn13";
+    binds = { user_id: readsTuple.userId, isbn13: readsTuple.isbn13 };
+    result = await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
+
+    return result;
+  } catch (err) {
+    console.error("addRead Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
 async function dbGetRate(isbn13) {
   let connection, sql, binds, result;
   try {
@@ -312,4 +408,7 @@ module.exports = {
   dbGetRate,
   dbAddRate,
   dbAddReview,
+  dbCheckRead,
+  dbInsertRead,
+  dbDeleteRead,
 };

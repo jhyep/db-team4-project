@@ -6,9 +6,14 @@ const { searchBook } = require("./bookUtil/searchBook.js");
 const { infoBook } = require("./bookUtil/infoBook.js");
 const { deleteBook } = require("./bookUtil/deleteBook.js");
 const { getReads } = require("./bookUtil/getReads.js");
-const { dbGetRate } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
-const { dbAddRate } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
-const { dbAddReview } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
+const {
+  dbGetRate,
+  dbAddRate,
+  dbAddReview,
+  dbCheckRead,
+  dbInsertRead,
+  dbDeleteRead,
+} = require("./dbUtil/dbBookUtils/dbBookUtils.js");
 
 router.post("/search", async function (req, res) {
   const requestData = req.body;
@@ -126,6 +131,57 @@ router.post("/getReads", async function (req, res) {
   } else {
     res.status(400).send("Bad Request");
     console.error("Bad request for read api: ", err);
+  }
+});
+
+router.post("/checkread", async function (req, res) {
+  const requestData = req.body;
+
+  if (requestData) {
+    try {
+      const result = await dbCheckRead(requestData);
+      res.send(result);
+    } catch (err) {
+      res.status(500).send("Internal Server Error");
+      console.error("Internal Server Error while checkread process: ", err);
+    }
+  } else {
+    res.status(400).send("Bad Request");
+    console.error("Bad request for checkread api: ", err);
+  }
+});
+
+router.post("/insertread", async function (req, res) {
+  const requestData = req.body;
+
+  if (requestData) {
+    try {
+      const result = await dbInsertRead(requestData);
+      res.send(result);
+    } catch (err) {
+      res.status(500).send("Internal Server Error");
+      console.error("Internal Server Error while checkread process: ", err);
+    }
+  } else {
+    res.status(400).send("Bad Request");
+    console.error("Bad request for insertread api: ", err);
+  }
+});
+
+router.post("/deleteread", async function (req, res) {
+  const requestData = req.body;
+
+  if (requestData) {
+    try {
+      const result = await dbDeleteRead(requestData);
+      res.send(result);
+    } catch (err) {
+      res.status(500).send("Internal Server Error");
+      console.error("Internal Server Error while checkread process: ", err);
+    }
+  } else {
+    res.status(400).send("Bad Request");
+    console.error("Bad request for deleteread api: ", err);
   }
 });
 
