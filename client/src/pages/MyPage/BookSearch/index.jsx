@@ -57,7 +57,6 @@ function BookSearch() {
                 <Item
                   onClick={() => {
                     handleClick(index);
-                    console.log(index);
                   }}
                   $selectedIndex={selectedIndex}
                   $index={index}
