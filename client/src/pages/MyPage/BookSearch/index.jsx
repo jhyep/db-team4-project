@@ -27,6 +27,11 @@ function BookSearch() {
     setSelectedIndex(index);
   }
 
+  function handleReload(e) {
+    setSearchWord(null);
+    searchBook(e);
+  }
+
   function searchBook(e) {
     e.preventDefault();
 
@@ -41,9 +46,16 @@ function BookSearch() {
   }
 
   return (
-    <ContentsBox width="1024px" height="250px" margin="15px 0">
+    <ContentsBox width="1024px" height="280px" margin="15px 0">
       <LinedSpan>내가 읽은 책 검색</LinedSpan>
       <FormContainer onSubmit={searchBook}>
+        <ReloadMenu
+          onSubmit={(e) => e.preventDefault()}
+          onClick={(e) => handleReload(e)}
+        >
+          <span> 결과 초기화</span>
+          <img src="/src/assets/icons/ReloadIcon.svg" alt="reload" />
+        </ReloadMenu>
         <SearchBar
           width="500px"
           onChange={(e) => setSearchWord(e.target.value)}
@@ -115,6 +127,19 @@ function BookSearch() {
 }
 
 export default BookSearch;
+
+const ReloadMenu = styled.button`
+  display: flex;
+  justify-content: flex-end;
+  color: ${palette.lightBlack};
+  cursor: pointer;
+
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+`;
 
 const FormContainer = styled.form`
   display: flex;
