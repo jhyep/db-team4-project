@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const { searchBook } = require("./bookUtil/searchBook.js");
 const { readBook } = require("./bookUtil/readBook.js");
+const { deleteBook } = require("./bookUtil/deleteBook.js");
 const { getReads } = require("./bookUtil/getReads.js");
 const { infoBook } = require("./bookUtil/infoBook.js");
 const { getRate } = require("./dbUtil/dbBookUtils/dbBookUtils.js");

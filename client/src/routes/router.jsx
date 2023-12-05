@@ -2,9 +2,9 @@ import App from '../App';
 import Main from '../pages/Main';
 import LogIn from '../pages/LogIn';
 import MyPage from '../pages/MyPage';
+import BookInfo from '../pages/BookInfo';
 import SignUp from '../pages/SignUp';
 import Search from '../pages/Search';
-import BookInfo from '../pages/BookInfo';
 import UserInfoEditPage from '../pages/MyPage/UserInfoEditPage';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 

@@ -29,7 +29,7 @@ function RightMenu() {
       {isLoggedIn ? (
         isAdmin ? (
           <>
-            <div>관리 페이지</div>
+            <Link to="/mypage">관리 페이지</Link>
             <div onClick={handleLogout}>로그아웃</div>
           </>
         ) : (
