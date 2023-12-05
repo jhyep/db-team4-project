@@ -9,6 +9,7 @@ function Reviews() {
   const params = useParams();
   const { inputCount, handleInput } = useInputCount();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLogined, setIsLogined] = useState(false);
   const [myContent, setMyContent] = useState('');
 
   useEffect(() => {
@@ -17,14 +18,18 @@ function Reviews() {
 
   async function getBookInfo(bookId) {
     try {
-      let response;
-      response = await axios.post('/book/getmyreview', {
-        isbn13: bookId,
-        userId: sessionStorage.getItem('userid'),
-      });
+      if (sessionStorage.getItem('userid')) {
+        setIsLogined(true);
 
-      if (response.data != null) {
-        setMyContent(response.data.contents);
+        let response;
+        response = await axios.post('/book/getmyreview', {
+          isbn13: bookId,
+          userId: sessionStorage.getItem('userid'),
+        });
+
+        if (response.data != null) {
+          setMyContent(response.data.contents);
+        }
       }
       setIsLoading(false);
     } catch (err) {
@@ -59,24 +64,30 @@ function Reviews() {
         <></>
       ) : (
         <>
-          <form>
+          {isLogined ? (
+            <form>
+              <ReviewContainer>
+                <h3>독후감 작성</h3>
+                <Editor
+                  placeholder="2000자 이내의 독후감을 남겨보세요."
+                  maxLength="2000"
+                  value={myContent}
+                  onChange={(e) => {
+                    handleInput(e);
+                    setMyContent(e.target.value);
+                  }}
+                ></Editor>
+                <Button type="submit" onClick={submitReview}>
+                  등록
+                </Button>
+                <p>{inputCount}/2000</p>
+              </ReviewContainer>
+            </form>
+          ) : (
             <ReviewContainer>
-              <h3>독후감 작성</h3>
-              <Editor
-                placeholder="2000자 이내의 독후감을 남겨보세요."
-                maxLength="2000"
-                value={myContent}
-                onChange={(e) => {
-                  handleInput(e);
-                  setMyContent(e.target.value);
-                }}
-              ></Editor>
-              <Button type="submit" onClick={submitReview}>
-                등록
-              </Button>
-              <p>{inputCount}/2000</p>
+              <h4>독후감을 작성하시려면 로그인해 주세요.</h4>
             </ReviewContainer>
-          </form>
+          )}
         </>
       )}
     </>
