@@ -72,6 +72,12 @@ const SortMenu = styled.div`
   color: #ccc;
   cursor: pointer;
   text-align: right;
+
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
 `;
 const BookList = styled.ul`
   display: flex;
