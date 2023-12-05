@@ -10,6 +10,8 @@ function Ratings() {
   const [bkRate, setBkRate] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { inputCount, handleInput } = useInputCount();
+  const [myRate, setMyRate] = useState(0);
+  const [myContent, setMyContent] = useState('');
 
   useEffect(() => {
     getBookInfo(params.book_id);
@@ -18,14 +20,43 @@ function Ratings() {
   async function getBookInfo(bookId) {
     try {
       let response;
-      response = await axios.post('/book/rate', {
+      response = await axios.post('/book/getrate', {
         itemId: bookId,
       });
       setBkRate(response.data);
       setIsLoading(false);
     } catch (err) {
-      console.log('failed to request', err);
+      console.log('failed to get ratings', err);
     }
+  }
+
+  async function submitRating(e) {
+    e.preventDefault();
+
+    try {
+      let response;
+      response = await axios.post('/book/addrate', {
+        rating: myRate,
+        contents: myContent,
+        user_id: sessionStorage.getItem('userid'),
+        isbn13: params.book_id,
+      });
+
+      console.log(response);
+
+      if (response.data == true) {
+        alert('한줄평이 등록되었습니다.');
+        window.location.reload();
+      } else {
+        alert('한줄평을 이미 작성하셨습니다.');
+        window.location.reload();
+      }
+    } catch (err) {
+      console.log('failed to add rating', err);
+    }
+    console.log(myRate);
+    console.log(inputCount);
+    console.log(myContent);
   }
 
   return (
@@ -54,16 +85,23 @@ function Ratings() {
                 max="10"
                 step="1"
                 defaultValue={'0'}
-                onChange={() => {}}
+                onChange={(e) => {
+                  setMyRate(e.target.value);
+                }}
                 style={{ border: '1px solid', width: '300px' }}
               />
               <Editor
                 placeholder="200자 이내의 간단한 리뷰를 남겨보세요."
                 maxLength="200"
-                onChange={handleInput}
+                onChange={(e) => {
+                  handleInput(e);
+                  setMyContent(e.target.value);
+                }}
               ></Editor>
               <p>{inputCount}/200</p>
-              <Button type="submit">등록</Button>
+              <Button type="submit" onClick={submitRating}>
+                등록
+              </Button>
             </RatingContainer>
           </form>
         </>
