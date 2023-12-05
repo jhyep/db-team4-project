@@ -226,17 +226,71 @@ async function dbAddRate(ratingTuple) {
   try {
     connection = await oracledb.getConnection(connectionConfig);
 
-    sql = "insert into rating values(0, :rating, :contents, :user_id, :isbn13)";
+    sql =
+      "select count(*) from rating where user_id=:user_id and isbn13=:isbn13";
     binds = {
-      rating: ratingTuple.rating,
-      contents: ratingTuple.contents,
       user_id: ratingTuple.user_id,
       isbn13: ratingTuple.isbn13,
     };
     result = await connection.execute(sql, binds);
-    await connection.execute("COMMIT");
 
-    return result;
+    if (result.rows[0][0] == 0) {
+      sql =
+        "insert into rating values(0, :rating, :contents, :user_id, :isbn13)";
+      binds = {
+        rating: ratingTuple.rating,
+        contents: ratingTuple.contents,
+        user_id: ratingTuple.user_id,
+        isbn13: ratingTuple.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error("addReview Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbAddReview(ratingTuple) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql =
+      "select count(*) from review where user_id=:user_id and isbn13=:isbn13";
+    binds = {
+      user_id: ratingTuple.user_id,
+      isbn13: ratingTuple.isbn13,
+    };
+    result = await connection.execute(sql, binds);
+
+    if (result.rows[0][0] == 0) {
+      sql = "insert into review values(0, :contents, :user_id, :isbn13)";
+      binds = {
+        contents: ratingTuple.contents,
+        user_id: ratingTuple.user_id,
+        isbn13: ratingTuple.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
     console.error("addReview Error: ", err);
     return null;
@@ -257,4 +311,5 @@ module.exports = {
   dbGetReads,
   dbGetRate,
   dbAddRate,
+  dbAddReview,
 };

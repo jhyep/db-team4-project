@@ -8,6 +8,7 @@ const { deleteBook } = require("./bookUtil/deleteBook.js");
 const { getReads } = require("./bookUtil/getReads.js");
 const { dbGetRate } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
 const { dbAddRate } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
+const { dbAddReview } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
 
 router.post("/search", async function (req, res) {
   const requestData = req.body;
@@ -74,6 +75,23 @@ router.post("/addrate", async function (req, res) {
   } else {
     res.status(400).send("Bad Request");
     console.error("Bad request for addrate api: ", err);
+  }
+});
+
+router.post("/addreview", async function (req, res) {
+  const requestData = req.body;
+
+  if (requestData) {
+    try {
+      const result = await dbAddReview(requestData);
+      res.send(result);
+    } catch (err) {
+      res.status(500).send("Internal Server Error");
+      console.error("Internal Server Error while add review: ", err);
+    }
+  } else {
+    res.status(400).send("Bad Request");
+    console.error("Bad request for addreview api: ", err);
   }
 });
 
