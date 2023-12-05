@@ -23,18 +23,45 @@ async function dbBookInsert(bkInfo) {
 
     // 없으면 책 추가
     if (result.rows[0][0] == 0) {
-      sql =
-        "insert into book values(:title, :author, :isbn13, TO_DATE(:pubDate, 'YYYY-MM-DD'), :publisher, 0, :series_id, 0)";
-      binds = {
-        title: bkInfo.title.substring(0, 83),
-        author: bkInfo.author.substring(0, 20),
-        isbn13: bkInfo.isbn13,
-        pubDate: bkInfo.pubDate,
-        publisher: bkInfo.publisher.substring(0, 20),
-        series_id: bkInfo.seriesId,
-      };
-      await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
+      if (bkInfo.seriesId) {
+        // 시리즈 있는지 확인
+        sql = "select count(*) from series where series_id=:series_id";
+        binds = {
+          series_id: bkInfo.seriesId,
+        };
+        result = await connection.execute(sql, binds);
+
+        // 없으면 시리즈 추가
+        if (result.rows[0][0] == 0) {
+          sql = "insert into series values(:series_id, :series_name)";
+          binds = {
+            series_id: bkInfo.seriesId,
+            series_name: bkInfo.seriesName.substring(0, 33),
+          };
+          result = await connection.execute(sql, binds);
+          await connection.execute("COMMIT");
+        }
+      }
+
+      if (bkInfo.categoryId) {
+        // 카테고리 있는지 확인
+        sql = "select count(*) from category where category_id=:category_id";
+        binds = {
+          category_id: bkInfo.categoryId,
+        };
+        result = await connection.execute(sql, binds);
+
+        // 없으면 카테고리 추가
+        if (result.rows[0][0] == 0) {
+          sql = "insert into category values(:category_id, :category_name)";
+          binds = {
+            category_id: bkInfo.categoryId,
+            category_name: bkInfo.categoryName.substring(0, 50),
+          };
+          result = await connection.execute(sql, binds);
+          await connection.execute("COMMIT");
+        }
+      }
 
       // 작가 있는지 확인
       sql = "select count(*) from author where author_name=:author_name";
@@ -58,6 +85,28 @@ async function dbBookInsert(bkInfo) {
         await connection.execute("COMMIT");
       }
 
+      sql =
+        "insert into book values(:title, :author, :isbn13, TO_DATE(:pubDate, 'YYYY-MM-DD'), :publisher, 0, :series_id, 0)";
+      binds = {
+        title: bkInfo.title.substring(0, 83),
+        author: bkInfo.author.substring(0, 20),
+        isbn13: bkInfo.isbn13,
+        pubDate: bkInfo.pubDate,
+        publisher: bkInfo.publisher.substring(0, 20),
+        series_id: bkInfo.seriesId,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+
+      // 카테고리와 책 연결
+      sql = "insert into has values(:category_id, :isbn13)";
+      binds = {
+        category_id: bkInfo.categoryId,
+        isbn13: bkInfo.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+
       // 작가와 책 연결
       sql = "select author_id from author where author_name=:author_name";
       binds = {
@@ -70,57 +119,6 @@ async function dbBookInsert(bkInfo) {
         author_id: result.rows[0][0],
         isbn13: bkInfo.isbn13,
       };
-      await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
-
-      if (bkInfo.categoryId) {
-        // 카테고리 있는지 확인
-        sql = "select count(*) from category where category_id=:category_id";
-        binds = {
-          category_id: bkInfo.categoryId,
-        };
-        result = await connection.execute(sql, binds);
-
-        // 없으면 카테고리 추가
-        if (result.rows[0][0] == 0) {
-          sql = "insert into category values(:category_id, :category_name)";
-          binds = {
-            category_id: bkInfo.categoryId,
-            category_name: bkInfo.categoryName.substring(0, 50),
-          };
-          result = await connection.execute(sql, binds);
-          await connection.execute("COMMIT");
-        }
-      }
-
-      // 카테고리와 책 연결
-      sql = "insert into has values(:category_id, :isbn13)";
-      binds = {
-        category_id: bkInfo.categoryId,
-        isbn13: bkInfo.isbn13,
-      };
-      await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
-
-      if (bkInfo.seriesId) {
-        // 시리즈 있는지 확인
-        sql = "select count(*) from series where series_id=:series_id";
-        binds = {
-          series_id: bkInfo.seriesId,
-        };
-        result = await connection.execute(sql, binds);
-
-        // 없으면 시리즈 추가
-        if (result.rows[0][0] == 0) {
-          sql = "insert into series values(:series_id, :series_name)";
-          binds = {
-            series_id: bkInfo.seriesId,
-            series_name: bkInfo.seriesName.substring(0, 33),
-          };
-          result = await connection.execute(sql, binds);
-          await connection.execute("COMMIT");
-        }
-      }
     }
 
     return true;
