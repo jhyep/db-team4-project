@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import * as S from './style';
 import SearchMenu from '../../components/SearchMenu';
 import PageContainer from '../../components/PageContainer';
@@ -35,20 +35,22 @@ function Search() {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
           >
-            <S.Cover
-              src={result.cover}
-              alt="커버"
-              width="150px"
-              height="220px"
-            />
-            <S.Title
-              style={{
-                textDecoration: hoveredIndex === index ? 'underline' : 'none',
-              }}
-            >
-              {result.title}
-            </S.Title>
-            <S.Author>{result.author}</S.Author>
+            <Link to={`/bkinfo/${searchResult[index].isbn13}`}>
+              <S.Cover
+                src={result.cover}
+                alt="커버"
+                width="150px"
+                height="220px"
+              />
+              <S.Title
+                style={{
+                  textDecoration: hoveredIndex === index ? 'underline' : 'none',
+                }}
+              >
+                {result.title}
+              </S.Title>
+              <S.Author>{result.author}</S.Author>
+            </Link>
           </S.InfoContainer>
         ))}
       </S.SearchResultContainer>
