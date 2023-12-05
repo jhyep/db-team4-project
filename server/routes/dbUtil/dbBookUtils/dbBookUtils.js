@@ -210,29 +210,6 @@ async function dbCheckRead(readsTuple) {
   }
 }
 
-async function dbAddRead(readsTuple) {
-  let connection, sql, binds, result;
-  try {
-    connection = await oracledb.getConnection(connectionConfig);
-    sql = "insert into reads values(:user_id, :isbn13)";
-    binds = { user_id: readsTuple.userId, isbn13: readsTuple.isbn13 };
-    result = await connection.execute(sql, binds);
-
-    return result;
-  } catch (err) {
-    console.error("addRead Error: ", err);
-    return null;
-  } finally {
-    if (connection) {
-      try {
-        connection.close();
-      } catch (err) {
-        console.error("Connection Close Error: ", err);
-      }
-    }
-  }
-}
-
 async function dbInsertRead(readsTuple) {
   let connection, sql, binds, result;
   try {
@@ -244,7 +221,7 @@ async function dbInsertRead(readsTuple) {
 
     return result;
   } catch (err) {
-    console.error("addRead Error: ", err);
+    console.error("dbInsertRead Error: ", err);
     return null;
   } finally {
     if (connection) {
@@ -268,7 +245,7 @@ async function dbDeleteRead(readsTuple) {
 
     return result;
   } catch (err) {
-    console.error("addRead Error: ", err);
+    console.error("dbDeleteRead Error: ", err);
     return null;
   } finally {
     if (connection) {
@@ -320,6 +297,26 @@ async function dbAddRate(ratingTuple) {
   try {
     connection = await oracledb.getConnection(connectionConfig);
 
+    // reads에 있는지 확인
+    sql =
+      "select count(*) from reads where user_id=:user_id and isbn13=:isbn13";
+    binds = {
+      user_id: ratingTuple.user_id,
+      isbn13: ratingTuple.isbn13,
+    };
+    result = await connection.execute(sql, binds);
+
+    // 없으면 reads 추가
+    if (result.rows[0][0] == 0) {
+      sql = "insert into reads values(:user_id, :isbn13)";
+      binds = {
+        user_id: ratingTuple.user_id,
+        isbn13: ratingTuple.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+    }
+
     sql =
       "select count(*) from rating where user_id=:user_id and isbn13=:isbn13";
     binds = {
@@ -340,7 +337,20 @@ async function dbAddRate(ratingTuple) {
       await connection.execute(sql, binds);
       await connection.execute("COMMIT");
 
-      return true;
+      return "insert";
+    } else if (result.rows[0][0] == 1) {
+      sql =
+        "UPDATE rating SET rating=:rating, contents=:contents WHERE user_id=:user_id and isbn13=:isbn13";
+      binds = {
+        rating: ratingTuple.rating,
+        contents: ratingTuple.contents,
+        user_id: ratingTuple.user_id,
+        isbn13: ratingTuple.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+
+      return "update";
     } else {
       return false;
     }
@@ -358,35 +368,130 @@ async function dbAddRate(ratingTuple) {
   }
 }
 
-async function dbAddReview(ratingTuple) {
+async function dbAddReview(reviewTuple) {
   let connection, sql, binds, result;
   try {
     connection = await oracledb.getConnection(connectionConfig);
 
+    // reads에 있는지 확인
+    sql =
+      "select count(*) from reads where user_id=:user_id and isbn13=:isbn13";
+    binds = {
+      user_id: reviewTuple.user_id,
+      isbn13: reviewTuple.isbn13,
+    };
+    result = await connection.execute(sql, binds);
+
+    // 없으면 reads 추가
+    if (result.rows[0][0] == 0) {
+      sql = "insert into reads values(:user_id, :isbn13)";
+      binds = {
+        user_id: reviewTuple.user_id,
+        isbn13: reviewTuple.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+    }
+
     sql =
       "select count(*) from review where user_id=:user_id and isbn13=:isbn13";
     binds = {
-      user_id: ratingTuple.user_id,
-      isbn13: ratingTuple.isbn13,
+      user_id: reviewTuple.user_id,
+      isbn13: reviewTuple.isbn13,
     };
     result = await connection.execute(sql, binds);
 
     if (result.rows[0][0] == 0) {
       sql = "insert into review values(0, :contents, :user_id, :isbn13)";
       binds = {
-        contents: ratingTuple.contents,
-        user_id: ratingTuple.user_id,
-        isbn13: ratingTuple.isbn13,
+        contents: reviewTuple.contents,
+        user_id: reviewTuple.user_id,
+        isbn13: reviewTuple.isbn13,
       };
       await connection.execute(sql, binds);
       await connection.execute("COMMIT");
 
-      return true;
+      return "insert";
+    } else if (result.rows[0][0] == 1) {
+      sql =
+        "UPDATE review SET contents=:contents WHERE user_id=:user_id and isbn13=:isbn13";
+      binds = {
+        contents: reviewTuple.contents,
+        user_id: reviewTuple.user_id,
+        isbn13: reviewTuple.isbn13,
+      };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
+
+      return "update";
     } else {
       return false;
     }
   } catch (err) {
     console.error("addReview Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbGetMyRate(requestData) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql =
+      "select rating, contents from rating where isbn13 = :isbn13 and user_id = :user_id";
+    binds = { isbn13: requestData.isbn13, user_id: requestData.userId };
+    result = await connection.execute(sql, binds);
+
+    if (result.rows.length == 0) return null;
+
+    const myRate = {
+      rating: result.rows[0][0],
+      contents: result.rows[0][1],
+    };
+
+    return myRate;
+  } catch (err) {
+    console.error("getMyRate Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbGetMyReview(requestData) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql =
+      "select contents from review where isbn13 = :isbn13 and user_id = :user_id";
+    binds = { isbn13: requestData.isbn13, user_id: requestData.userId };
+    result = await connection.execute(sql, binds);
+
+    if (result.rows.length == 0) return null;
+
+    const myReview = {
+      contents: result.rows[0][0],
+    };
+
+    return myReview;
+  } catch (err) {
+    console.error("getMyReview Error: ", err);
     return null;
   } finally {
     if (connection) {
@@ -409,4 +514,6 @@ module.exports = {
   dbCheckRead,
   dbInsertRead,
   dbDeleteRead,
+  dbGetMyRate,
+  dbGetMyReview,
 };

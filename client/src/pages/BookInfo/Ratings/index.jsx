@@ -24,6 +24,16 @@ function Ratings() {
         itemId: bookId,
       });
       setBkRate(response.data);
+
+      response = await axios.post('/book/getmyrate', {
+        isbn13: bookId,
+        userId: sessionStorage.getItem('userid'),
+      });
+
+      if (response.data != null) {
+        setMyRate(response.data.rating);
+        setMyContent(response.data.contents);
+      }
       setIsLoading(false);
     } catch (err) {
       console.log('failed to get ratings', err);
@@ -42,21 +52,14 @@ function Ratings() {
         isbn13: params.book_id,
       });
 
-      console.log(response);
-
       if (response.data == true) {
         alert('한줄평이 등록되었습니다.');
-        window.location.reload();
       } else {
-        alert('한줄평을 이미 작성하셨습니다.');
-        window.location.reload();
+        alert('한줄평을 수정하였습니다.');
       }
     } catch (err) {
       console.log('failed to add rating', err);
     }
-    console.log(myRate);
-    console.log(inputCount);
-    console.log(myContent);
   }
 
   return (
@@ -84,7 +87,7 @@ function Ratings() {
                 min="0"
                 max="10"
                 step="1"
-                defaultValue={'0'}
+                value={myRate}
                 onChange={(e) => {
                   setMyRate(e.target.value);
                 }}
@@ -93,6 +96,7 @@ function Ratings() {
               <Editor
                 placeholder="200자 이내의 간단한 리뷰를 남겨보세요."
                 maxLength="200"
+                value={myContent}
                 onChange={(e) => {
                   handleInput(e);
                   setMyContent(e.target.value);

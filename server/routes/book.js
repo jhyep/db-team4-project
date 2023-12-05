@@ -13,6 +13,8 @@ const {
   dbCheckRead,
   dbInsertRead,
   dbDeleteRead,
+  dbGetMyRate,
+  dbGetMyReview,
 } = require("./dbUtil/dbBookUtils/dbBookUtils.js");
 
 router.post("/search", async function (req, res) {
@@ -131,6 +133,40 @@ router.post("/getReads", async function (req, res) {
   } else {
     res.status(400).send("Bad Request");
     console.error("Bad request for read api: ", err);
+  }
+});
+
+router.post("/getmyreview", async function (req, res) {
+  const requestData = req.body;
+
+  if (requestData) {
+    try {
+      const result = await dbGetMyReview(requestData);
+      res.send(result);
+    } catch (err) {
+      res.status(500).send("Internal Server Error");
+      console.error("Internal Server Error while checkread process: ", err);
+    }
+  } else {
+    res.status(400).send("Bad Request");
+    console.error("Bad request for getmyreview api: ", err);
+  }
+});
+
+router.post("/getmyrate", async function (req, res) {
+  const requestData = req.body;
+
+  if (requestData) {
+    try {
+      const result = await dbGetMyRate(requestData);
+      res.send(result);
+    } catch (err) {
+      res.status(500).send("Internal Server Error");
+      console.error("Internal Server Error while checkread process: ", err);
+    }
+  } else {
+    res.status(400).send("Bad Request");
+    console.error("Bad request for getmyreview api: ", err);
   }
 });
 

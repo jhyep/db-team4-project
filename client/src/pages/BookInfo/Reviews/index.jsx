@@ -10,7 +10,6 @@ function Reviews() {
   const { inputCount, handleInput } = useInputCount();
   const [isLoading, setIsLoading] = useState(true);
   const [myContent, setMyContent] = useState('');
-  const [myReview, setMyReview] = useState([]);
 
   useEffect(() => {
     getBookInfo(params.book_id);
@@ -19,11 +18,14 @@ function Reviews() {
   async function getBookInfo(bookId) {
     try {
       let response;
-      response = await axios.post('/book/getreview', {
-        itemId: bookId,
+      response = await axios.post('/book/getmyreview', {
+        isbn13: bookId,
         userId: sessionStorage.getItem('userid'),
       });
-      setMyReview(response.data);
+
+      if (response.data != null) {
+        setMyContent(response.data.contents);
+      }
       setIsLoading(false);
     } catch (err) {
       console.log('failed to get ratings', err);
@@ -41,14 +43,10 @@ function Reviews() {
         isbn13: params.book_id,
       });
 
-      console.log(response);
-
-      if (response.data == true) {
+      if (response.data == 'insert') {
         alert('리뷰가 등록되었습니다.');
-        window.location.reload();
-      } else {
-        alert('리뷰를 이미 작성하셨습니다.');
-        window.location.reload();
+      } else if (response.data == 'update') {
+        alert('리뷰를 수정하였습니다.');
       }
     } catch (err) {
       console.log('failed to add rating', err);
@@ -61,15 +59,13 @@ function Reviews() {
         <></>
       ) : (
         <>
-          <div>
-            <p>(내용) {myReview[0].contents}</p>
-          </div>
           <form>
             <ReviewContainer>
               <h3>독후감 작성</h3>
               <Editor
                 placeholder="2000자 이내의 독후감을 남겨보세요."
                 maxLength="2000"
+                value={myContent}
                 onChange={(e) => {
                   handleInput(e);
                   setMyContent(e.target.value);
