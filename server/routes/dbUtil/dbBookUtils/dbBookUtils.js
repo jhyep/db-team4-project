@@ -33,6 +33,184 @@ async function dbGetReads(userid) {
   }
 }
 
+async function dbBookRead(userid, book) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    if (book.seriesid != 0) {
+      sql =
+        "insert into series (series_id, series_name) select :seriesid, :seriesname from dual where not exists (select series_id from series where series_id = :seriesid)";
+      binds = { seriesid: book.seriesid, seriesname: book.seriesname };
+      await connection.execute(sql, binds);
+    }
+    book.seriesid = book.seriesid === 0 ? null : book.seriesid;
+
+    sql =
+      "insert into category (category_id, category_name) select :categoryid, :categoryname from dual where not exists (select category_id from category where category_id = :categoryid)";
+    binds = { categoryid: book.categoryid, categoryname: book.categoryname };
+    await connection.execute(sql, binds);
+
+    sql =
+      "insert into book (title, author, isbn13, pubDate, publisher, num_of_rating, series_Id,  salesPoint) select :title, :author, :isbn13, :pubdate, :publisher, :numofrating, :seriesid, :salespoint from dual where not exists (select isbn13 from book where isbn13 = :isbn13)";
+    binds = {
+      title: book.title,
+      author: book.author,
+      isbn13: book.isbn13,
+      pubdate: book.pubdate,
+      publisher: book.publisher,
+      numofrating: book.numofrating,
+      seriesid: book.seriesid,
+      salespoint: book.salespoint,
+    };
+    await connection.execute(sql, binds);
+
+    sql =
+      "insert into reads (user_id, isbn13) select :userid, :isbn13 from dual where not exists (select isbn13 from reads where user_id = :userid and isbn13 = :isbn13)";
+    binds = { userid: userid, isbn13: book.isbn13 };
+    result = await connection.execute(sql, binds);
+
+    return result;
+  } catch (err) {
+    console.error("Save Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function getRate(isbn13) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql = "select * from rating where isbn13 = :isbn13";
+    binds = { isbn13 };
+    result = await connection.execute(sql, binds);
+
+    const rateSet = [];
+
+    for (const rate of result.rows) {
+      rateSet.push({
+        userId: rate[3],
+        rating: rate[1],
+        comment: rate[2],
+      });
+    }
+
+    return rateSet;
+  } catch (err) {
+    console.error("getReview Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbWriteComment(userid, rating, isbn13, contents) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql =
+      "select MAX(rating_id) as rating_id from rating where user_id = :userid";
+    binds = { userid };
+    result = await connection.execute(sql, binds);
+    rating_id = result.rows[0][0] + 1;
+
+    sql =
+      "MERGE INTO rating r USING dual ON (r.isbn13 = :isbn13 and r.user_id = :userid) WHEN MATCHED THEN UPDATE SET r.rating = :rating, r.contents = :contents WHEN NOT MATCHED THEN INSERT (rating_id, rating, contents, user_id, isbn13) VALUES (:rating_id, :rating, :contents, :userid, :isbn13)";
+    binds = { rating_id, rating, userid, isbn13, contents };
+    result = await connection.execute(sql, binds);
+
+    return result;
+  } catch (err) {
+    console.error("SignUp Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbWriteReview(userid, isbn13, contents) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+
+    sql =
+      "select MAX(review_id) as review_id from review where user_id = :userid";
+    binds = { userid };
+    result = await connection.execute(sql, binds);
+    review_id = result.rows[0][0] + 1;
+
+    sql =
+      "MERGE INTO review r USING dual ON (r.isbn13 = :isbn13) WHEN MATCHED THEN UPDATE SET r.contents = :contents WHEN NOT MATCHED THEN INSERT (review_id, contents, user_id, isbn13) VALUES (:review_id, :contents, :userid, :isbn13)";
+    binds = { review_id, userid, isbn13, contents };
+    result = await connection.execute(sql, binds);
+
+    return result;
+  } catch (err) {
+    console.error("SignUp Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
+async function dbLoadReview(userid, isbn13) {
+  let connection, sql, binds, result;
+  try {
+    connection = await oracledb.getConnection(connectionConfig);
+    sql =
+      "select contents from review r where r.isbn13 = :isbn13 and r.user_id = :userid";
+    binds = { isbn13, userid };
+    options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
+    result = await connection.execute(sql, binds, options);
+
+    return result;
+  } catch (err) {
+    console.error("Reads Error: ", err);
+    return null;
+  } finally {
+    if (connection) {
+      try {
+        connection.close();
+      } catch (err) {
+        console.error("Connection Close Error: ", err);
+      }
+    }
+  }
+}
+
 module.exports = {
   dbGetReads,
+  dbBookRead,
+  getRate,
+  dbWriteComment,
+  dbWriteReview,
+  dbLoadReview,
 };

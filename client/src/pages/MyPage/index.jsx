@@ -6,8 +6,10 @@ import LinedSpan from '../../components/LinedSpan';
 import ContentsBox from '../../components/ContentsBox';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function MyPage() {
+  const navigate = useNavigate();
   const initialName = sessionStorage.getItem('name') || '김철수';
 
   const [name, setName] = useState(initialName);
@@ -33,6 +35,10 @@ function MyPage() {
     };
     fetchReads();
   }, []);
+
+  function handleResultClick(isbn13) {
+    navigate(`/bkinfo/${sessionStorage.getItem('userid')}/${isbn13}`);
+  }
 
   const nameStyle = {
     fontSize: '28px',
@@ -65,7 +71,10 @@ function MyPage() {
         <ul>
           {reads && reads.length > 0 ? (
             reads.map((read) => (
-              <li key={read.ISBN13}>
+              <li
+                key={read.ISBN13}
+                onClick={() => handleResultClick(read.ISBN13)}
+              >
                 <p>제목: {read.TITLE}</p>
               </li>
             ))

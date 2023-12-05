@@ -23,7 +23,6 @@ async function pixelUpgrade(cover) {
 async function searchBook(requestData) {
   const aladinSearchUrl =
     "http://www.aladin.co.kr/ttb/api/ItemSearch.aspx?MaxResults=100&output=js&Version=20131101&CategoryId=0";
-
   try {
     const searchResult = [];
     let aladinResponse;
@@ -58,12 +57,10 @@ async function searchBook(requestData) {
       aladinResponse.data.totalResults / aladinResponse.data.itemsPerPage >
       aladinResponse.data.startIndex
     );
-
     return searchResult;
   } catch (err) {
     console.log("aladin API request err: ", err);
     throw err;
   }
 }
-
 module.exports = { searchBook };

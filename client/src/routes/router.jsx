@@ -4,6 +4,7 @@ import LogIn from '../pages/LogIn';
 import MyPage from '../pages/MyPage';
 import SignUp from '../pages/SignUp';
 import Search from '../pages/Search';
+import BookInfo from '../pages/BookInfo';
 import UserInfoEditPage from '../pages/MyPage/UserInfoEditPage';
 import { Outlet, createBrowserRouter } from 'react-router-dom';
 
@@ -26,12 +27,16 @@ const router = createBrowserRouter([
             element: <UserInfoEditPage />,
           },
           {
-            path: 'book',
+            path: 'bkinfo/:book_id',
+            element: <BookInfo />,
+          },
+          {
+            path: 'bkinfo/:user_id',
             element: <Outlet />,
             children: [
               {
                 path: ':book_id',
-                element: <div>book info</div>,
+                element: <BookInfo />,
               },
             ],
           },

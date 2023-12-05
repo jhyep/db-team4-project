@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import * as S from './style';
 import SearchMenu from '../../components/SearchMenu';
 import PageContainer from '../../components/PageContainer';
@@ -9,6 +9,7 @@ function Search() {
   const location = useLocation();
   const { searchWord, searchResult } = location.state || {};
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const navigate = useNavigate();
 
   function handleMouseEnter(index) {
     setHoveredIndex(index);
@@ -16,6 +17,10 @@ function Search() {
 
   function handleMouseLeave() {
     setHoveredIndex(null);
+  }
+
+  function handleResultClick(isbn13) {
+    navigate(`/bkinfo/${isbn13}`);
   }
 
   return (
@@ -34,6 +39,7 @@ function Search() {
             key={index}
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeave}
+            onClick={() => handleResultClick(result.isbn13)}
           >
             <S.Cover
               src={result.cover}
