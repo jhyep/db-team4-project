@@ -20,7 +20,6 @@ function BookInfo() {
   });
 
   async function handleAddReadButtonClick() {
-    setIsRead((prevState) => !prevState);
     try {
       await axios.post('/book/insertRead', {
         userId: sessionStorage.getItem('userid'),
@@ -33,7 +32,6 @@ function BookInfo() {
   }
 
   async function handleRemoveReadButtonClick() {
-    setIsRead((prevState) => !prevState);
     try {
       await axios.post('/book/deleteRead', {
         userId: sessionStorage.getItem('userid'),
@@ -91,7 +89,6 @@ function BookInfo() {
             <MenuContainer>
               <span onClick={handleRatingsClick}>Ratings </span>
               <span onClick={handleReviewClick}>Reviews </span>
-              <span> --- 클릭 가능한 메뉴 입니다</span>
             </MenuContainer>
 
             {isRating ? <Ratings /> : <Reviews />}
