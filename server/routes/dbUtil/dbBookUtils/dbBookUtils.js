@@ -65,7 +65,7 @@ async function dbGetCustomReads(requestData) {
     switch (requestData.searchType) {
       case 0:
         sql =
-          "select b.title, b.isbn13 from book b, reads r where b.isbn13 = r.isbn13 and r.user_id = :userid and b.title like :title";
+          "select b.title, b.isbn13 from book b, reads r where b.isbn13 = r.isbn13 and r.user_id = :userid and LOWER(b.title) like LOWER(:title)";
         binds = {
           userid: requestData.userId,
           title: "%" + requestData.searchWord + "%",
@@ -81,7 +81,7 @@ async function dbGetCustomReads(requestData) {
         break;
       case 2:
         sql =
-          "select b.title, b.isbn13 from book b, reads r, author a, writes w where b.isbn13 = r.isbn13 and b.isbn13 = w.isbn13 and w.author_id = a.author_id and r.user_id = :userid and a.author_name like :author_name";
+          "select b.title, b.isbn13 from book b, reads r, author a, writes w where b.isbn13 = r.isbn13 and b.isbn13 = w.isbn13 and w.author_id = a.author_id and r.user_id = :userid and LOWER(a.author_name) like LOWER(:author_name)";
         binds = {
           userid: requestData.userId,
           author_name: "%" + requestData.searchWord + "%",
@@ -89,7 +89,7 @@ async function dbGetCustomReads(requestData) {
         break;
       case 3:
         sql =
-          "select b.title, b.isbn13 from book b, reads r where b.isbn13 = r.isbn13 and r.user_id = :userid and b.publisher like :publisher";
+          "select b.title, b.isbn13 from book b, reads r where b.isbn13 = r.isbn13 and r.user_id = :userid and LOWER(b.publisher) like LOWER(:publisher)";
         binds = {
           userid: requestData.userId,
           publisher: "%" + requestData.searchWord + "%",
@@ -97,7 +97,7 @@ async function dbGetCustomReads(requestData) {
         break;
       case 4:
         sql =
-          "select b.title, b.isbn13 from book b, reads r, series s where b.isbn13 = r.isbn13 and b.series_id = s.series_id and r.user_id = :userid and s.series_name like :series_name";
+          "select b.title, b.isbn13 from book b, reads r, series s where b.isbn13 = r.isbn13 and b.series_id = s.series_id and r.user_id = :userid and LOWER(s.series_name) like LOWER(:series_name)";
         binds = {
           userid: requestData.userId,
           series_name: "%" + requestData.searchWord + "%",
