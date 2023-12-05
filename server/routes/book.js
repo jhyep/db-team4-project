@@ -187,7 +187,7 @@ router.post("/checkread", async function (req, res) {
   }
 });
 
-router.post("/insertread", async function (req, res) {
+router.post("/insertRead", async function (req, res) {
   const requestData = req.body;
 
   if (requestData) {

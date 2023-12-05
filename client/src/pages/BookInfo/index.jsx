@@ -22,11 +22,11 @@ function BookInfo() {
   async function handleAddReadButtonClick() {
     setIsRead((prevState) => !prevState);
     try {
-      await axios.post('/book/insertread', {
+      await axios.post('/book/insertRead', {
         userId: sessionStorage.getItem('userid'),
         isbn13: params.book_id,
       });
-      setIsRead(false.data);
+      setIsRead(true);
     } catch (err) {
       console.log('failed to check read state', err);
     }
@@ -75,15 +75,17 @@ function BookInfo() {
         <PageContainer>
           <ContentsBox width="1024px">
             <BookDescription />
-            {isRead ? (
-              <Button width="130px" onClick={handleRemoveReadButtonClick}>
-                - 내 서재에서 삭제
-              </Button>
-            ) : (
-              <Button width="130px" onClick={handleAddReadButtonClick}>
-                + 내 서재에 추가
-              </Button>
-            )}
+            <ButtonContainer>
+              {isRead ? (
+                <Button width="130px" onClick={handleRemoveReadButtonClick}>
+                  - 내 서재에서 삭제
+                </Button>
+              ) : (
+                <Button width="130px" onClick={handleAddReadButtonClick}>
+                  + 내 서재에 추가
+                </Button>
+              )}
+            </ButtonContainer>
           </ContentsBox>
           <ContentsBox width="1024px">
             <MenuContainer>
@@ -101,6 +103,10 @@ function BookInfo() {
 }
 
 export default BookInfo;
+
+const ButtonContainer = styled.div`
+  text-align: right;
+`;
 
 const MenuContainer = styled.div`
   cursor: pointer;

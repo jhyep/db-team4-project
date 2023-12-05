@@ -1,4 +1,5 @@
 import axios from 'axios';
+import styled from 'styled-components';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
@@ -24,20 +25,45 @@ function BookDescription() {
   }
 
   return (
-    <>
+    <Container>
       <img src={bkInfo.cover ? bkInfo.cover : ''} />
-      <div style={{ marginLeft: '20px' }}>
-        <div>제목: {bkInfo.title}</div>
-        <div>저자: {bkInfo.author}</div>
-        <div>출간일: {bkInfo.pubDate}</div>
-        <div>출판사: {bkInfo.publisher}</div>
+      <InfoContainer style={{ marginLeft: '20px' }}>
+        <h2>{bkInfo.title}</h2>
         <div>
-          카테고리: {bkInfo.categoryName ? bkInfo.categoryName : '(없음)'}
+          저자 <Divider>|</Divider> {bkInfo.author}
         </div>
-        <div>시리즈: {bkInfo.seriesName ? bkInfo.seriesName : '(없음)'}</div>
-      </div>
-    </>
+        <div>
+          출판사 <Divider>|</Divider> {bkInfo.publisher}
+        </div>
+        <div>
+          출간일 <Divider>|</Divider> {bkInfo.pubDate}
+        </div>
+        <div>
+          카테고리 <Divider>|</Divider>{' '}
+          {bkInfo.categoryName ? bkInfo.categoryName : '(없음)'}
+        </div>
+        <div>
+          시리즈 <Divider>|</Divider>{' '}
+          {bkInfo.seriesName ? bkInfo.seriesName : '(없음)'}
+        </div>
+      </InfoContainer>
+    </Container>
   );
 }
 
 export default BookDescription;
+
+const Container = styled.div`
+  display: flex;
+`;
+
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 5px;
+`;
+
+const Divider = styled.span`
+  color: #ccc;
+`;
