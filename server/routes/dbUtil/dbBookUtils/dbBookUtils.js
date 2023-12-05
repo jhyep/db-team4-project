@@ -61,7 +61,7 @@ async function dbGetCustomReads(requestData) {
   let connection, sql, binds, result;
   try {
     connection = await oracledb.getConnection(connectionConfig);
-    console.log(requestData.searchType);
+
     switch (requestData.searchType) {
       case 0:
         sql =
@@ -144,7 +144,6 @@ async function dbGetCustomReads(requestData) {
         sql +
         " ORDER BY ( SELECT AVG(r.rating) FROM rating r WHERE r.isbn13 = b.isbn13 ) DESC";
     }
-    console.log(sql);
 
     options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
     result = await connection.execute(sql, binds, options);
