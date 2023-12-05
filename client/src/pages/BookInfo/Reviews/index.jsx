@@ -2,13 +2,33 @@ import styled from 'styled-components';
 import Button from '../../../components/Button';
 import { useInputCount } from '../../../hooks/useInputCount';
 import { useParams } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 function Reviews() {
   const params = useParams();
   const { inputCount, handleInput } = useInputCount();
+  const [isLoading, setIsLoading] = useState(true);
   const [myContent, setMyContent] = useState('');
+  const [myReview, setMyReview] = useState([]);
+
+  useEffect(() => {
+    getBookInfo(params.book_id);
+  }, [params.book_id]);
+
+  async function getBookInfo(bookId) {
+    try {
+      let response;
+      response = await axios.post('/book/getreview', {
+        itemId: bookId,
+        userId: sessionStorage.getItem('userid'),
+      });
+      setMyReview(response.data);
+      setIsLoading(false);
+    } catch (err) {
+      console.log('failed to get ratings', err);
+    }
+  }
 
   async function submitReview(e) {
     e.preventDefault();
@@ -37,23 +57,32 @@ function Reviews() {
 
   return (
     <>
-      <form>
-        <ReviewContainer>
-          <h3>독후감 작성</h3>
-          <Editor
-            placeholder="2000자 이내의 독후감을 남겨보세요."
-            maxLength="2000"
-            onChange={(e) => {
-              handleInput(e);
-              setMyContent(e.target.value);
-            }}
-          ></Editor>
-          <Button type="submit" onClick={submitReview}>
-            등록
-          </Button>
-          <p>{inputCount}/2000</p>
-        </ReviewContainer>
-      </form>
+      {isLoading ? (
+        <></>
+      ) : (
+        <>
+          <div>
+            <p>(내용) {myReview[0].contents}</p>
+          </div>
+          <form>
+            <ReviewContainer>
+              <h3>독후감 작성</h3>
+              <Editor
+                placeholder="2000자 이내의 독후감을 남겨보세요."
+                maxLength="2000"
+                onChange={(e) => {
+                  handleInput(e);
+                  setMyContent(e.target.value);
+                }}
+              ></Editor>
+              <Button type="submit" onClick={submitReview}>
+                등록
+              </Button>
+              <p>{inputCount}/2000</p>
+            </ReviewContainer>
+          </form>
+        </>
+      )}
     </>
   );
 }
