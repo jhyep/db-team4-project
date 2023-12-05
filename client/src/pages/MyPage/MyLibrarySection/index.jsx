@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useLayoutEffect } from 'react';
 import { CheckIcon } from '../../../assets/icons/CheckIcon';
 import axios from 'axios';
@@ -8,15 +8,22 @@ import LinedSpan from '../../../components/LinedSpan';
 import ContentsBox from '../../../components/ContentsBox';
 
 function MyLibrarySection() {
+  const location = useLocation();
   const [reads, setReads] = useState([]);
   const [isSorted, setIsSorted] = useState(false);
+  const { searchWord, selectedIndex, baseRate, endRate } = location.state || {};
 
   useLayoutEffect(() => {
     const fetchReads = async () => {
       const userid = sessionStorage.getItem('userid');
       try {
         const response = await axios.post('/book/getReads', {
-          userid: userid,
+          userId: userid,
+          searchWord: searchWord,
+          searchType: selectedIndex,
+          baseRate: baseRate,
+          endRate: endRate,
+          isSorted: isSorted,
         });
 
         setReads(response.data.rows);
@@ -25,7 +32,7 @@ function MyLibrarySection() {
       }
     };
     fetchReads();
-  }, []);
+  }, [searchWord, selectedIndex, baseRate, endRate, isSorted]);
 
   function handleClick() {
     setIsSorted((prevState) => !prevState);
