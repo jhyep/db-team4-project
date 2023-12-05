@@ -5,7 +5,6 @@ export function useInputCount() {
 
   function handleInput(e) {
     setInputCount(e.target.value.length);
-    console.log(inputCount);
   }
 
   return { inputCount, handleInput };
