@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import palette from '../../../styles/palette';
+import LinedSpan from '../../../components/LinedSpan';
 import SearchBar from '../../../components/SearchMenu/SearchBar';
 import ContentsBox from '../../../components/ContentsBox';
 
@@ -22,7 +23,8 @@ function BookSearch() {
   }
 
   return (
-    <ContentsBox width="1024px" margin="15px 0">
+    <ContentsBox width="1024px" height="250px" margin="15px 0">
+      <LinedSpan>내가 읽은 책 검색</LinedSpan>
       <FormContainer>
         <SearchBar width="500px" />
         <ConditionContainer>
@@ -90,6 +92,7 @@ const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
 `;
 const ConditionContainer = styled.ul`
   display: flex;
