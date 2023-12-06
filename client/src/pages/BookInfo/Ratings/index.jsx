@@ -47,48 +47,54 @@ function Ratings(props) {
 
   async function submitRating(e) {
     e.preventDefault();
+    if (myContent.length === 0) {
+      alert('한 글자 이상 입력해주세요.');
+    } else {
+      try {
+        let response;
+        response = await axios.post('/book/addrate', {
+          rating: myRate,
+          contents: myContent,
+          user_id: sessionStorage.getItem('userid'),
+          isbn13: params.book_id,
+        });
 
-    try {
-      let response;
-      response = await axios.post('/book/addrate', {
-        rating: myRate,
-        contents: myContent,
-        user_id: sessionStorage.getItem('userid'),
-        isbn13: params.book_id,
-      });
-
-      if (response.data == 'insert') {
-        alert('한줄평이 등록되었습니다.');
-      } else if (response.data == 'update') {
-        alert('한줄평을 수정하였습니다.');
+        if (response.data == 'insert') {
+          alert('한줄평이 등록되었습니다.');
+        } else if (response.data == 'update') {
+          alert('한줄평을 수정하였습니다.');
+        }
+        window.location.reload();
+      } catch (err) {
+        console.log('failed to add rating', err);
       }
-      window.location.reload();
-    } catch (err) {
-      console.log('failed to add rating', err);
     }
   }
 
   function handleOnchange(e) {
-    if (e.target.value.length === 0) {
-      alert('한 글자 이상 입력해주세요.');
-    } else {
-      handleInput(e);
-      setMyContent(e.target.value);
-    }
+    handleInput(e);
+    setMyContent(e.target.value);
   }
 
   return (
-    <>
+    <Container>
       {isLoading ? (
-        <></>
+        <p>로딩 중입니다.</p>
       ) : (
         <>
+          <h3>다른 사용자들의 review</h3>
           {bkRate.map((item, index) => {
             return (
-              <div key={`search-result-${index}`} style={{ marginTop: '1em' }}>
-                <p>(__ID) {item.userId}</p>
-                <p>(평점) {item.rating}</p>
-                <p>(내용) {item.comment}</p>
+              <div key={`search-result-${index}`}>
+                <p>
+                  ID <Divider>|</Divider> {item.userId}
+                </p>
+                <p>
+                  평점 <Divider>|</Divider> {item.rating}
+                </p>
+                <p>
+                  내용 <Divider>|</Divider> {item.comment}
+                </p>
               </div>
             );
           })}
@@ -132,19 +138,29 @@ function Ratings(props) {
           )}
         </>
       )}
-    </>
+    </Container>
   );
 }
 
 export default Ratings;
 
+const Container = styled.div`
+  margin-top: 20px;
+`;
+
 const RatingContainer = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 30px;
 `;
 
 const Editor = styled.textarea`
+  resize: none;
   width: 300px;
   height: 100px;
   margin-top: 10px;
+`;
+
+const Divider = styled.span`
+  color: #ccc;
 `;
