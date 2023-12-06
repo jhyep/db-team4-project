@@ -18,13 +18,15 @@ function MyPage() {
   return (
     <PageContainer>
       <ProfileSection />
-      <BookSearch />
       {isAdmin ? (
         <ContentsBox width="500px">
           <AdminSection />
         </ContentsBox>
       ) : (
-        <MyLibrarySection />
+        <>
+          <BookSearch />
+          <MyLibrarySection />
+        </>
       )}
     </PageContainer>
   );
