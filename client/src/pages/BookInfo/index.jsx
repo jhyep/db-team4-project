@@ -1,9 +1,10 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import axios from 'axios';
 import styled from 'styled-components';
 import Reviews from './Reviews';
 import Ratings from './Ratings';
-import axios from 'axios';
+import palette from '../../styles/palette';
 import Button from '../../components/Button';
 import BookDescription from './BookDescription';
 import ContentsBox from '../../components/ContentsBox';
@@ -85,10 +86,16 @@ function BookInfo() {
               )}
             </ButtonContainer>
           </ContentsBox>
-          <ContentsBox width="1024px">
+          <ContentsBox width="1024px" margin="10px 0 0 0">
             <MenuContainer>
-              <span onClick={handleRatingsClick}>Ratings </span>
-              <span onClick={handleReviewClick}>Reviews </span>
+              <RatingMenu $isRating={isRating} onClick={handleRatingsClick}>
+                Ratings{' '}
+              </RatingMenu>
+              <Divider>|</Divider>
+              <ReviewMenu $isRating={isRating} onClick={handleReviewClick}>
+                {' '}
+                Reviews
+              </ReviewMenu>
             </MenuContainer>
 
             {isRating ? (
@@ -111,4 +118,18 @@ const ButtonContainer = styled.div`
 
 const MenuContainer = styled.div`
   cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+`;
+
+const RatingMenu = styled.span`
+  color: ${(props) => (props.$isRating ? palette.mainYellow : '#ccc')};
+`;
+
+const ReviewMenu = styled.span`
+  color: ${(props) => (props.$isRating ? '#888' : palette.mainYellow)};
+`;
+
+const Divider = styled.span`
+  color: #ccc;
 `;

@@ -1,9 +1,10 @@
-import styled from 'styled-components';
-import Button from '../../../components/Button';
-import { useInputCount } from '../../../hooks/useInputCount';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useInputCount } from '../../../hooks/useInputCount';
 import axios from 'axios';
+import styled from 'styled-components';
+import palette from '../../../styles/palette';
+import Button from '../../../components/Button';
 
 function Reviews(props) {
   const params = useParams();
@@ -71,19 +72,23 @@ function Reviews(props) {
         <ReviewContainer>
           {props.isRead ? (
             <form>
-              <h3>독후감 작성</h3>
-              <Editor
-                placeholder="1300자 이내의 독후감을 남겨보세요."
-                maxLength="1300"
-                value={myContent}
-                onChange={(e) => {
-                  handleOnchange(e);
-                }}
-              ></Editor>
-              <Button type="submit" onClick={submitReview}>
-                등록
-              </Button>
-              <p>{inputCount}/1300</p>
+              <Title>독후감 작성</Title>
+              <EditorWrapper>
+                <EditorContainer>
+                  <Editor
+                    placeholder="1300자 이내의 간단한 리뷰를 남겨보세요."
+                    maxLength="1300"
+                    value={myContent}
+                    onChange={(e) => {
+                      handleOnchange(e);
+                    }}
+                  ></Editor>
+                  <p style={{ textAlign: 'right' }}>{inputCount}/200</p>
+                </EditorContainer>
+                <Button type="submit" height="100px" onClick={submitReview}>
+                  등록
+                </Button>
+              </EditorWrapper>
             </form>
           ) : (
             <h4>내 서재에 추가 후 작성을 진행해주세요</h4>
@@ -101,13 +106,39 @@ function Reviews(props) {
 export default Reviews;
 
 const ReviewContainer = styled.div`
+  margin-top: 30px;
+`;
+
+const Title = styled.span`
+  color: black;
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-family: GmarketSansMedium;
+  font-weight: bold;
+
+  /* thick underline */
+  box-shadow: inset 0 -8px ${palette.highlight};
+`;
+
+const EditorWrapper = styled.div`
+  display: flex;
+  margin-top: 10px;
+
+  > button {
+    margin-top: 12px;
+    margin-left: 20px;
+  }
+`;
+
+const EditorContainer = styled.div`
   display: flex;
   flex-direction: column;
+  width: 700px;
 `;
 
 const Editor = styled.textarea`
   resize: none;
-  width: 300px;
+  width: 700px;
   height: 100px;
   margin-top: 10px;
 `;

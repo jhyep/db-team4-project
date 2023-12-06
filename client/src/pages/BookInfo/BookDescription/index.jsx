@@ -27,7 +27,7 @@ function BookDescription() {
   return (
     <Container>
       <img src={bkInfo.cover ? bkInfo.cover : ''} />
-      <InfoContainer style={{ marginLeft: '20px' }}>
+      <InfoContainer style={{ marginLeft: '40px' }}>
         <h2>{bkInfo.title}</h2>
         <div>
           저자 <Divider>|</Divider> {bkInfo.author}
@@ -61,7 +61,7 @@ const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-top: 5px;
+  margin-top: 10px;
 `;
 
 const Divider = styled.span`

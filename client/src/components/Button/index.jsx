@@ -4,6 +4,7 @@ function Button({
   children,
   color,
   width,
+  height,
   backgroundColor,
   onClick,
   ...restProps
@@ -12,7 +13,7 @@ function Button({
     color: color || '#fff',
     width: width || '80px',
     backgroundColor: backgroundColor || `${palette.mainYellow}`,
-    height: '34px',
+    height: height || '34px',
     fontSize: '14px',
   };
 
