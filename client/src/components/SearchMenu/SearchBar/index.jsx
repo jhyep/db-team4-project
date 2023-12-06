@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import palette from '../../../styles/palette';
 
-function SearchBar({ width, onChange }) {
+function SearchBar({ width, onChange, disabled }) {
   return (
     <SearchArea width={width}>
       <SearchInput
@@ -9,6 +9,7 @@ function SearchBar({ width, onChange }) {
         name="searchWord"
         placeholder="검색어를 입력해주세요"
         onChange={onChange}
+        disabled={disabled}
       ></SearchInput>
       <SearchButton type="submit" />
     </SearchArea>
