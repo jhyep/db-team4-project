@@ -11,17 +11,9 @@ async function signup(requestData) {
   let result;
 
   try {
-    result = await checkDupId(userid);
-    if (result.rows.length > 0) {
-      return { state: false, cause: "userid" };
-    } else {
-      result = await createUser(userid, password, username);
-      if (result.rowsAffected > 0) {
-        return { state: true };
-      } else {
-        return { state: false, cause: "error" };
-      }
-    }
+    result = await createUser(userid, password, username);
+
+    return result;
   } catch (err) {
     console.error("SignUp Error: ", err);
   }

@@ -1,6 +1,6 @@
 const oracledb = require("oracledb");
 const dbConfig = require("../dbConfig.js");
-oracledb.autoCommit = true;
+oracledb.autoCommit = false;
 
 const connectionConfig = {
   user: dbConfig.user,
@@ -13,6 +13,8 @@ async function dbBookInsert(bkInfo) {
 
   try {
     connection = await oracledb.getConnection(connectionConfig);
+
+    await connection.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
 
     // db에 책이 있는지 확인
     sql = "select count(*) from book where isbn13=:isbn13";
@@ -39,7 +41,6 @@ async function dbBookInsert(bkInfo) {
             series_name: bkInfo.seriesName.substring(0, 33),
           };
           result = await connection.execute(sql, binds);
-          await connection.execute("COMMIT");
         }
       }
 
@@ -59,7 +60,6 @@ async function dbBookInsert(bkInfo) {
             category_name: bkInfo.categoryName.substring(0, 50),
           };
           result = await connection.execute(sql, binds);
-          await connection.execute("COMMIT");
         }
       }
 
@@ -82,7 +82,6 @@ async function dbBookInsert(bkInfo) {
           author_name: bkInfo.author.substring(0, 20),
         };
         result = await connection.execute(sql, binds);
-        await connection.execute("COMMIT");
       }
 
       sql =
@@ -96,7 +95,6 @@ async function dbBookInsert(bkInfo) {
         series_id: bkInfo.seriesId,
       };
       await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
 
       // 카테고리와 책 연결
       sql = "insert into has values(:category_id, :isbn13)";
@@ -105,7 +103,6 @@ async function dbBookInsert(bkInfo) {
         isbn13: bkInfo.isbn13,
       };
       await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
 
       // 작가와 책 연결
       sql = "select author_id from author where author_name=:author_name";
@@ -122,10 +119,18 @@ async function dbBookInsert(bkInfo) {
       await connection.execute(sql, binds);
       await connection.execute("COMMIT");
     }
+    await connection.execute("COMMIT");
 
     return true;
   } catch (err) {
-    console.error("Insert Error: ", err);
+    if (connection) {
+      try {
+        await connection.execute("ROLLBACK");
+        return "INSERT ROLLBACK";
+      } catch (rollbackError) {
+        console.error("Insert Rollback error:", rollbackError);
+      }
+    }
     return null;
   } finally {
     if (connection) {
@@ -146,6 +151,7 @@ async function dbBookDelete(isbn13) {
     sql = "delete from book where isbn13 = :isbn13";
     binds = { isbn13 };
     result = await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
 
     return result;
   } catch (err) {
@@ -216,6 +222,8 @@ async function dbInsertRead(readsTuple) {
   let connection, sql, binds, result;
   try {
     connection = await oracledb.getConnection(connectionConfig);
+    await connection.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+
     sql = "insert into reads values(:user_id, :isbn13)";
     binds = { user_id: readsTuple.userId, isbn13: readsTuple.isbn13 };
     result = await connection.execute(sql, binds);
@@ -223,7 +231,14 @@ async function dbInsertRead(readsTuple) {
 
     return result;
   } catch (err) {
-    console.error("dbInsertRead Error: ", err);
+    if (connection) {
+      try {
+        await connection.execute("ROLLBACK");
+        return " INSERT READ ROLLBACK";
+      } catch (rollbackError) {
+        console.error("AddRate Rollback error:", rollbackError);
+      }
+    }
     return null;
   } finally {
     if (connection) {
@@ -299,6 +314,8 @@ async function dbAddRate(ratingTuple) {
   try {
     connection = await oracledb.getConnection(connectionConfig);
 
+    await connection.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
+
     // reads에 있는지 확인
     sql =
       "select count(*) from reads where user_id=:user_id and isbn13=:isbn13";
@@ -316,7 +333,6 @@ async function dbAddRate(ratingTuple) {
         isbn13: ratingTuple.isbn13,
       };
       await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
     }
 
     sql =
@@ -354,10 +370,18 @@ async function dbAddRate(ratingTuple) {
 
       return "update";
     } else {
+      await connection.execute("COMMIT");
       return false;
     }
   } catch (err) {
-    console.error("addReview Error: ", err);
+    if (connection) {
+      try {
+        await connection.execute("ROLLBACK");
+        return " ROLLBACK";
+      } catch (rollbackError) {
+        console.error("AddRate Rollback error:", rollbackError);
+      }
+    }
     return null;
   } finally {
     if (connection) {
@@ -374,6 +398,8 @@ async function dbAddReview(reviewTuple) {
   let connection, sql, binds, result;
   try {
     connection = await oracledb.getConnection(connectionConfig);
+
+    await connection.execute("SET TRANSACTION ISOLATION LEVEL READ COMMITTED");
 
     // reads에 있는지 확인
     sql =
@@ -392,7 +418,6 @@ async function dbAddReview(reviewTuple) {
         isbn13: reviewTuple.isbn13,
       };
       await connection.execute(sql, binds);
-      await connection.execute("COMMIT");
     }
 
     sql =
@@ -427,10 +452,18 @@ async function dbAddReview(reviewTuple) {
 
       return "update";
     } else {
+      await connection.execute("COMMIT");
       return false;
     }
   } catch (err) {
-    console.error("addReview Error: ", err);
+    if (connection) {
+      try {
+        await connection.execute("ROLLBACK");
+        return " ROLLBACK";
+      } catch (rollbackError) {
+        console.error("AddReview Rollback error:", rollbackError);
+      }
+    }
     return null;
   } finally {
     if (connection) {
