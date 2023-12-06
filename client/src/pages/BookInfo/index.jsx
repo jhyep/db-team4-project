@@ -91,7 +91,11 @@ function BookInfo() {
               <span onClick={handleReviewClick}>Reviews </span>
             </MenuContainer>
 
-            {isRating ? <Ratings /> : <Reviews />}
+            {isRating ? (
+              <Ratings isRead={isRead} />
+            ) : (
+              <Reviews isRead={isRead} />
+            )}
           </ContentsBox>
         </PageContainer>
       )}

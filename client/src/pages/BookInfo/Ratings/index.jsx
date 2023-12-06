@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from '../../../components/Button';
 import { useInputCount } from '../../../hooks/useInputCount';
 
-function Ratings() {
+function Ratings(props) {
   const params = useParams();
   const [bkRate, setBkRate] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,6 +67,15 @@ function Ratings() {
     }
   }
 
+  function handleOnchange(e) {
+    if (e.target.value.length === 0) {
+      alert('한 글자 이상 입력해주세요.');
+    } else {
+      handleInput(e);
+      setMyContent(e.target.value);
+    }
+  }
+
   return (
     <>
       {isLoading ? (
@@ -84,35 +93,36 @@ function Ratings() {
           })}
           {isLogined ? (
             <form>
-              <RatingContainer>
-                <h3>한줄평 작성</h3>
-                <span>평점: </span>
-                <input
-                  type="number"
-                  name="searchRecentPublish"
-                  min="0"
-                  max="10"
-                  step="1"
-                  value={myRate}
-                  onChange={(e) => {
-                    setMyRate(e.target.value);
-                  }}
-                  style={{ border: '1px solid', width: '300px' }}
-                />
-                <Editor
-                  placeholder="200자 이내의 간단한 리뷰를 남겨보세요."
-                  maxLength="200"
-                  value={myContent}
-                  onChange={(e) => {
-                    handleInput(e);
-                    setMyContent(e.target.value);
-                  }}
-                ></Editor>
-                <p>{inputCount}/200</p>
-                <Button type="submit" onClick={submitRating}>
-                  등록
-                </Button>
-              </RatingContainer>
+              {props.isRead && (
+                <RatingContainer>
+                  <h3>한줄평 작성</h3>
+                  <span>평점: </span>
+                  <input
+                    type="number"
+                    name="searchRecentPublish"
+                    min="0"
+                    max="10"
+                    step="1"
+                    value={myRate}
+                    onChange={(e) => {
+                      setMyRate(e.target.value);
+                    }}
+                    style={{ border: '1px solid', width: '300px' }}
+                  />
+                  <Editor
+                    placeholder="200자 이내의 간단한 리뷰를 남겨보세요."
+                    maxLength="200"
+                    value={myContent}
+                    onChange={(e) => {
+                      handleOnchange(e);
+                    }}
+                  ></Editor>
+                  <p>{inputCount}/200</p>
+                  <Button type="submit" onClick={submitRating}>
+                    등록
+                  </Button>
+                </RatingContainer>
+              )}
             </form>
           ) : (
             <RatingContainer>

@@ -5,10 +5,9 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-function Reviews() {
+function Reviews(props) {
   const params = useParams();
   const { inputCount, handleInput } = useInputCount();
-  const [isLoading, setIsLoading] = useState(true);
   const [isLogined, setIsLogined] = useState(false);
   const [myContent, setMyContent] = useState('');
 
@@ -31,7 +30,6 @@ function Reviews() {
           setMyContent(response.data.contents);
         }
       }
-      setIsLoading(false);
     } catch (err) {
       console.log('failed to get ratings', err);
     }
@@ -58,37 +56,43 @@ function Reviews() {
     }
   }
 
+  function handleOnchange(e) {
+    if (e.target.value.length === 0) {
+      alert('한 글자 이상 입력해주세요.');
+    } else {
+      handleInput(e);
+      setMyContent(e.target.value);
+    }
+  }
+
   return (
     <>
-      {isLoading ? (
-        <></>
-      ) : (
-        <>
-          {isLogined ? (
+      {isLogined ? (
+        <ReviewContainer>
+          {props.isRead ? (
             <form>
-              <ReviewContainer>
-                <h3>독후감 작성</h3>
-                <Editor
-                  placeholder="2000자 이내의 독후감을 남겨보세요."
-                  maxLength="2000"
-                  value={myContent}
-                  onChange={(e) => {
-                    handleInput(e);
-                    setMyContent(e.target.value);
-                  }}
-                ></Editor>
-                <Button type="submit" onClick={submitReview}>
-                  등록
-                </Button>
-                <p>{inputCount}/2000</p>
-              </ReviewContainer>
+              <h3>독후감 작성</h3>
+              <Editor
+                placeholder="2000자 이내의 독후감을 남겨보세요."
+                maxLength="2000"
+                value={myContent}
+                onChange={(e) => {
+                  handleOnchange(e);
+                }}
+              ></Editor>
+              <Button type="submit" onClick={submitReview}>
+                등록
+              </Button>
+              <p>{inputCount}/2000</p>
             </form>
           ) : (
-            <ReviewContainer>
-              <h4>독후감을 작성하시려면 로그인해 주세요.</h4>
-            </ReviewContainer>
+            <h4>내 서재에 추가 후 작성을 진행해주세요</h4>
           )}
-        </>
+        </ReviewContainer>
+      ) : (
+        <ReviewContainer>
+          <h4>독후감을 작성하시려면 로그인해 주세요.</h4>
+        </ReviewContainer>
       )}
     </>
   );
