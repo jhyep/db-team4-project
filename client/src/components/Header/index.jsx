@@ -9,7 +9,7 @@ function Header() {
       <HeaderWrapper>
         <HeaderContainer>
           <Title>
-            <Link to="/">독후감 사이트</Link>
+            <Link to="/">북로그:BookLog</Link>
           </Title>
           <RightMenu />
         </HeaderContainer>
