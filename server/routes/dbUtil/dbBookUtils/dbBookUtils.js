@@ -151,6 +151,7 @@ async function dbBookDelete(isbn13) {
     sql = "delete from book where isbn13 = :isbn13";
     binds = { isbn13 };
     result = await connection.execute(sql, binds);
+    await connection.execute("COMMIT");
 
     return result;
   } catch (err) {
@@ -369,9 +370,7 @@ async function dbAddRate(ratingTuple) {
 
       return "update";
     } else {
-      await connection.execute(
-        "SET TRANSACTION ISOLATION LEVEL READ COMMITTED",
-      );
+      await connection.execute("COMMIT");
       return false;
     }
   } catch (err) {
