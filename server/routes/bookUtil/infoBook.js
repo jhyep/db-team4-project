@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { dbBookInsert } = require("../dbUtil/dbBookUtils/dbBookUtils");
 require("dotenv").config();
 
 async function infoBook(requestData) {
@@ -12,7 +13,6 @@ async function infoBook(requestData) {
         ttbkey: process.env.ALADIN_API_KEY,
       },
     });
-
     const item = aladinResponse.data.item[0];
 
     const bkInfo = {
@@ -21,14 +21,20 @@ async function infoBook(requestData) {
       pubDate: item.pubDate,
       isbn13: item.isbn13 ? item.isbn13 : await isbn10to13(item.isbn),
       cover: item.cover,
+      categoryId: item.categoryId,
       categoryName: item.categoryName,
       publisher: item.publisher,
+      seriesId: item.seriesInfo ? item.seriesInfo.seriesId : "",
       seriesName: item.seriesInfo ? item.seriesInfo.seriesName : "",
     };
 
+    if ((await dbBookInsert(bkInfo)) == false) {
+      throw new Error("db addBook failed.");
+    }
+
     return bkInfo;
   } catch (err) {
-    console.log("aladin API request err: ", err);
+    console.log("infoBook err: ", err);
     throw err;
   }
 }
