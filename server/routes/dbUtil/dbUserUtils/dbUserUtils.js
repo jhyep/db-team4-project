@@ -42,7 +42,6 @@ async function createUser(userid, password, username) {
       "insert into web_user (user_id, password, name) values (:userid, :password, :username)";
     binds = { userid, password, username };
     result = await connection.execute(sql, binds);
-    await connection.execute(sql, binds);
     await connection.execute("COMMIT");
 
     return result;
