@@ -83,11 +83,11 @@ function Ratings(props) {
         <p>로딩 중입니다.</p>
       ) : (
         <>
+          <Title>한줄평 작성</Title>
           {isLogined ? (
             <form>
-              {props.isRead && (
+              {props.isRead ? (
                 <>
-                  <Title>한줄평 작성</Title>
                   <InputContainer>
                     <div>
                       <span>평점: </span>
@@ -126,6 +126,10 @@ function Ratings(props) {
                     </EditorWrapper>
                   </InputContainer>
                 </>
+              ) : (
+                <InputContainer>
+                  <h4>내 서재에 추가 후 작성을 진행해 주세요.</h4>
+                </InputContainer>
               )}
             </form>
           ) : (

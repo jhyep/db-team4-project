@@ -68,37 +68,41 @@ function Reviews(props) {
 
   return (
     <>
-      {isLogined ? (
-        <ReviewContainer>
-          {props.isRead ? (
-            <form>
-              <Title>독후감 작성</Title>
-              <EditorWrapper>
-                <EditorContainer>
-                  <Editor
-                    placeholder="1300자 이내의 간단한 리뷰를 남겨보세요."
-                    maxLength="1300"
-                    value={myContent}
-                    onChange={(e) => {
-                      handleOnchange(e);
-                    }}
-                  ></Editor>
-                  <p style={{ textAlign: 'right' }}>{inputCount}/1300</p>
-                </EditorContainer>
-                <Button type="submit" height="100px" onClick={submitReview}>
-                  등록
-                </Button>
-              </EditorWrapper>
-            </form>
-          ) : (
-            <h4>내 서재에 추가 후 작성을 진행해주세요</h4>
-          )}
-        </ReviewContainer>
-      ) : (
-        <ReviewContainer>
-          <h4>독후감을 작성하시려면 로그인해 주세요.</h4>
-        </ReviewContainer>
-      )}
+      <ReviewContainer>
+        <Title>독후감 작성</Title>
+        {isLogined ? (
+          <>
+            {props.isRead ? (
+              <form>
+                <EditorWrapper>
+                  <EditorContainer>
+                    <Editor
+                      placeholder="1300자 이내의 간단한 리뷰를 남겨보세요."
+                      maxLength="1300"
+                      value={myContent}
+                      onChange={(e) => {
+                        handleOnchange(e);
+                      }}
+                    ></Editor>
+                    <p style={{ textAlign: 'right' }}>{inputCount}/1300</p>
+                  </EditorContainer>
+                  <Button type="submit" height="100px" onClick={submitReview}>
+                    등록
+                  </Button>
+                </EditorWrapper>
+              </form>
+            ) : (
+              <h4 style={{ marginTop: '10px' }}>
+                내 서재에 추가 후 작성을 진행해 주세요.
+              </h4>
+            )}
+          </>
+        ) : (
+          <h4 style={{ marginTop: '10px' }}>
+            독후감을 작성하시려면 로그인해 주세요.
+          </h4>
+        )}
+      </ReviewContainer>
     </>
   );
 }
