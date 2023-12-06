@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import palette from '../../../styles/palette';
 import LinedSpan from '../../../components/LinedSpan';
@@ -16,17 +17,50 @@ function BookSearch() {
     '특정 평점',
     '카테고리명',
   ];
+  const [searchWord, setSearchWord] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [baseRate, setBaseRate] = useState(0);
+  const [endRate, setEndRate] = useState(0);
+  const navigate = useNavigate();
 
   function handleClick(index) {
     setSelectedIndex(index);
   }
 
+  function handleReload(e) {
+    setSearchWord(null);
+    searchBook(e);
+  }
+
+  function searchBook(e) {
+    e.preventDefault();
+
+    navigate('/mypage', {
+      state: {
+        searchWord,
+        selectedIndex,
+        baseRate,
+        endRate,
+      },
+    });
+  }
+
   return (
-    <ContentsBox width="1024px" height="250px" margin="15px 0">
+    <ContentsBox width="1024px" height="280px" margin="15px 0">
       <LinedSpan>내가 읽은 책 검색</LinedSpan>
-      <FormContainer>
-        <SearchBar width="500px" />
+      <FormContainer onSubmit={searchBook}>
+        <ReloadMenu
+          onSubmit={(e) => e.preventDefault()}
+          onClick={(e) => handleReload(e)}
+        >
+          <span> 결과 초기화</span>
+          <img src="/src/assets/icons/ReloadIcon.svg" alt="reload" />
+        </ReloadMenu>
+        <SearchBar
+          width="500px"
+          onChange={(e) => setSearchWord(e.target.value)}
+          disabled={selectedIndex === 5 || selectedIndex === 6}
+        />
         <ConditionContainer>
           <Head>검색 조건</Head>
           {conditions.map((item, index) => {
@@ -52,19 +86,23 @@ function BookSearch() {
             <input
               type="number"
               name="firstNumber"
+              defaultValue={0}
               max="10"
               style={{
                 border: '1px solid',
                 width: '50px',
                 marginLeft: '10px',
               }}
+              onChange={(e) => setBaseRate(e.target.value)}
             />
             <span> ~ </span>
             <input
               type="number"
               name="secondtNumber"
+              defaultValue={0}
               max="10"
               style={{ border: '1px solid', width: '50px' }}
+              onChange={(e) => setEndRate(e.target.value)}
             />
             <span> (0부터 10 사이의 숫자를 입력해주세요)</span>
           </div>
@@ -75,8 +113,10 @@ function BookSearch() {
             <input
               type="number"
               name="rate"
+              defaultValue={0}
               max="10"
               style={{ border: '1px solid', width: '50px', marginLeft: '10px' }}
+              onChange={(e) => setBaseRate(e.target.value)}
             />
             <span> (0부터 10 사이의 숫자를 입력해주세요)</span>
           </div>
@@ -87,6 +127,19 @@ function BookSearch() {
 }
 
 export default BookSearch;
+
+const ReloadMenu = styled.button`
+  display: flex;
+  justify-content: flex-end;
+  color: ${palette.lightBlack};
+  cursor: pointer;
+
+  -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+`;
 
 const FormContainer = styled.form`
   display: flex;
