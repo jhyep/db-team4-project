@@ -83,7 +83,7 @@ function Reviews(props) {
                       handleOnchange(e);
                     }}
                   ></Editor>
-                  <p style={{ textAlign: 'right' }}>{inputCount}/200</p>
+                  <p style={{ textAlign: 'right' }}>{inputCount}/1300</p>
                 </EditorContainer>
                 <Button type="submit" height="100px" onClick={submitReview}>
                   등록
