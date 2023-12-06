@@ -51,6 +51,7 @@ function Reviews(props) {
       } else if (response.data == 'update') {
         alert('리뷰를 수정하였습니다.');
       }
+      window.location.reload();
     } catch (err) {
       console.log('failed to add rating', err);
     }

@@ -57,11 +57,12 @@ function Ratings(props) {
         isbn13: params.book_id,
       });
 
-      if (response.data == true) {
+      if (response.data == 'insert') {
         alert('한줄평이 등록되었습니다.');
-      } else {
+      } else if (response.data == 'update') {
         alert('한줄평을 수정하였습니다.');
       }
+      window.location.reload();
     } catch (err) {
       console.log('failed to add rating', err);
     }

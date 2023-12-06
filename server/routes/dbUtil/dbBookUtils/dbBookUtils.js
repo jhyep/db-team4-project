@@ -119,6 +119,8 @@ async function dbBookInsert(bkInfo) {
         author_id: result.rows[0][0],
         isbn13: bkInfo.isbn13,
       };
+      await connection.execute(sql, binds);
+      await connection.execute("COMMIT");
     }
 
     return true;
