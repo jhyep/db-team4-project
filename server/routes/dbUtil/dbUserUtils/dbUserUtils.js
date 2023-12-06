@@ -38,14 +38,25 @@ async function createUser(userid, password, username) {
   try {
     connection = await oracledb.getConnection(connectionConfig);
 
+    sql = "select * from web_user where user_id = :userid";
+    binds = { userid };
+    options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
+    result = await connection.execute(sql, binds, options);
+
+    if (result.rows.length > 0) {
+      return { state: false, cause: "userid" };
+    }
+
     sql =
       "insert into web_user (user_id, password, name) values (:userid, :password, :username)";
     binds = { userid, password, username };
     result = await connection.execute(sql, binds);
-    await connection.execute(sql, binds);
-    await connection.execute("COMMIT");
 
-    return result;
+    if (result.rowsAffected > 0) {
+      return { state: true };
+    } else {
+      return { state: false, casue: "error" };
+    }
   } catch (err) {
     console.error("SignUp Error: ", err);
     return null;

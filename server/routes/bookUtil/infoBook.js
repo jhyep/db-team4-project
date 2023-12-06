@@ -1,11 +1,9 @@
 const axios = require("axios");
 const { dbBookInsert } = require("../dbUtil/dbBookUtils/dbBookUtils");
 require("dotenv").config();
-
 async function infoBook(requestData) {
   const aladinBookInfoUrl =
     "https://www.aladin.co.kr/ttb/api/ItemLookUp.aspx?itemIdType=ISBN13&output=JS&Version=20131101&Cover=Big";
-
   try {
     const aladinResponse = await axios.get(aladinBookInfoUrl, {
       params: {
@@ -38,5 +36,4 @@ async function infoBook(requestData) {
     throw err;
   }
 }
-
 module.exports = { infoBook };
