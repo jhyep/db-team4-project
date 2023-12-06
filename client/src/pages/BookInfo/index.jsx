@@ -33,14 +33,16 @@ function BookInfo() {
   }
 
   async function handleRemoveReadButtonClick() {
-    try {
-      await axios.post('/book/deleteRead', {
-        userId: sessionStorage.getItem('userid'),
-        isbn13: params.book_id,
-      });
-      setIsRead(false);
-    } catch (err) {
-      console.log('failed to check read state', err);
+    if (window.confirm('삭제시 독후감 정보도 함께 삭제됩니다')) {
+      try {
+        await axios.post('/book/deleteRead', {
+          userId: sessionStorage.getItem('userid'),
+          isbn13: params.book_id,
+        });
+        setIsRead(false);
+      } catch (err) {
+        console.log('failed to check read state', err);
+      }
     }
   }
 
